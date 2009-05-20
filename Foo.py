@@ -3,3 +3,5 @@ class Foo(object):
       pass
    def bar(self):
       pass
+   def baz(self):
+      pass
