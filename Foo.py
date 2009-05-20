@@ -5,3 +5,5 @@ class Foo(object):
       pass
    def baz(self):
       pass
+   def test2(self):
+      pass
