@@ -6,4 +6,4 @@ class Foo(object):
    def baz(self):
       pass
    def test2(self):
-      pass
+      print "huhu"
