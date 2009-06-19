@@ -62,25 +62,46 @@ class GenomeModel(Observable):
         self.setChanged()
     def writeSequence(self, txtctrl):
         txtctrl.SetFont(self.layout.getSequenceFont())
-        len=self.genome.getSequenceLength()
+        # change: wir lassen erstmal das genom bis zur range laufen
+        # TODO: richtige implementation
+        len=self.getEndRange()
         sequence=self.genome.getSequence()
         if self.upperCase:
             sequence=sequence.upper()
         i=0
         while i + self.charsPerLine <= len:
-            txtctrl.WriteText(sequence[i:i+self.charsPerLine])
-            txtctrl.Newline()
+            #i mod x, also jede x-te stelle wird nummeriert
+            if(i%200==0):
+                # die null braucht mehr space, da sie ja nur einstellig ist
+                if(i==0):
+                    txtctrl.WriteText(str(i)+"   ")
+                    txtctrl.WriteText(sequence[i:i+self.charsPerLine])
+                    txtctrl.Newline()
+                else:
+                    txtctrl.WriteText(str(i)+" ")
+                    txtctrl.WriteText(sequence[i:i+self.charsPerLine])
+                    txtctrl.Newline()
+            # ansonsten einfach spaces einfuegen, damit alles einheitlich ist
+            else:
+                txtctrl.WriteText("    ")
+                txtctrl.WriteText(sequence[i:i+self.charsPerLine])
+                txtctrl.Newline()
             i+=self.charsPerLine
         txtctrl.WriteText(sequence[i:len])
-    def writeNumeration(self, numTxtctrl, seqTxtctrl):
-        numTxtctrl.SetFont(self.layout.getNumerationFont())
-        i=0
-        number=0
-        while i<seqTxtctrl.GetNumberOfLines():
-            numTxtctrl.WriteText(str(number) + "-" + str(number+seqTxtctrl.GetLineLength(i)-1))
-            numTxtctrl.Newline()
-            i+=1
-            number+=self.charsPerLine
+
+    # change: ORIGINAL panel beschriftung
+    # - vorerst nummerierung im textfeld
+    # TODO: bessere loesung ausdenken
+#    def writeNumeration(self, numTxtctrl, seqTxtctrl):
+#        numTxtctrl.SetFont(self.layout.getNumerationFont())
+#        i=0
+#        number=0
+#        while i<seqTxtctrl.GetNumberOfLines():
+#            numTxtctrl.WriteText(str(number) + "-" + str(number+seqTxtctrl.GetLineLength(i)-1))
+#            numTxtctrl.Newline()
+#            i+=1
+#            number+=self.charsPerLine
+
     def writeFeatures(self, txtctrl):
         for iFlist in range(self.featureListContainer.getContainerLength()):
             # print iFlist

@@ -22,9 +22,12 @@ class MainFrame(wx.Frame):
     def __init__ (self):
 
         wx.Frame.__init__(self, None, -1, "Genome Viewer", size=(self.hsize, self.vsize))
-
         #self.panel = wx.Panel(self, -1)
         #self.panel.SetSize(size=(self.hsize, self.vsize))
+        
+        # macht, dass nummerierung noch nicht losgeht, bevor genom geladen ist
+        loaded = False
+
         self.CreateStatusBar()
 
         ### creating the menu ###
@@ -73,6 +76,8 @@ class MainFrame(wx.Frame):
         self.genomemodel.setGenome(self.genome)
         self.genomemodel.setFeatureListContainer(self.container)
         self.genomeview = GenomeView(self.genomemodel, self, -1)
+        if(loaded == True):
+            self.genomeview.write()
         self.genome.addObserver(self.genomeview)
 
         ### sizer ###
@@ -99,6 +104,8 @@ class MainFrame(wx.Frame):
             fasta = Imports.Fasta()
             fasta.importfasta(dialog.GetPath())
             dialog.Destroy()
+
+        self.loaded = True
 
     def OnOpenGffAnnotation(self, event):
         wildcard = "GFF file (*.gff) |*.gff|" \
