@@ -1,4 +1,5 @@
 class Feature():
+    """Type of data"""
     id=""
     active=True
     type=""

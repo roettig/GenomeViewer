@@ -14,7 +14,7 @@ class MainFrame(wx.Frame):
         wx.Frame.__init__(self, parent, id, title, size=(800,400))
 
         genome = Genome()
-        genome.setSequence("123456789012345678901234567890123456789012345678901234567890tgctcgatcgaagctagaaactgaaatcgatcgatcgatcgagatgatcgatcgagactacagcatgactagctagagactagcattcagcgatagacgagagctactagcgatcagcgagcatcgacgatcagctagagctactatgctcgatcgaagctagaaactgaaatcgatcgatcgatcgagatgatcgatcgagactacagcatgactagctagagactagcattcagcgatagacgagagctactagcgatcagcgagcatcgacgatcagctagagctactatgctcgatcgaagctagaaactgaaatcgatcgatcgatcgagatgatcgatcgagactacagcatgactagctagagactagcattcagcgatagacgagagctactagcgatcagcgagcatcgacgatcagctagagctact")
+        genome.setSequence("")
 
         featurelist=FeatureList("test")
         feature1=Feature("protein1", "protein asdgqiuw", 0, 49)

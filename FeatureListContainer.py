@@ -2,6 +2,7 @@ from FeatureList import FeatureList
 from Observable import Observable
 
 class FeatureListContainer(Observable):
+    """overall Database"""
     #featureLists=[[],[]]
 
     def __init__(self, initial_featureLists=[[],[]]):
@@ -24,7 +25,7 @@ class FeatureListContainer(Observable):
         self.featureLists[1] = gfflist
         self.setChanged()
         print len(self.featureLists[1])
-        
+
     """gets and sets attributes of FeatureList"""
     def getFlistActive(self, i):
         return self.featureLists[i].getFlistActive()
