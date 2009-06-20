@@ -4,13 +4,13 @@
 import wx
 # from Observable import Observable
 
-class Layout():
+class Layout:
     txtSize=0
     bgColor="white"
     txtColor="black"
     colorList=[]
 
-    def __init__(self, initial_txtSize=15, initial_bgColor="white", initial_txtColor="black", initial_colorList=["red", "magenta", "cyan", "blue", "green", "yellow", "orange"]):
+    def __init__(self, initial_txtSize=10, initial_bgColor="white", initial_txtColor="black", initial_colorList=["red", "magenta", "cyan", "blue", "green", "yellow", "orange"]):
         self.txtSize=initial_txtSize
         self.bgColor=initial_bgColor
         self.txtColor=initial_txtColor

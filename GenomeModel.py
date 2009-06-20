@@ -1,4 +1,4 @@
-# liest das Genom und die Nummerierung in die Textfelder
+# liest das Genom (+Annotationen) und die Nummerierung in die Textfelder
 
 from Genome import Genome
 from Layout import Layout
@@ -11,12 +11,12 @@ class GenomeModel(Observable):
     genome = Genome()
     featureListContainer = FeatureListContainer()
     upperCase = True
-    charsPerLine = 50
+    charsPerLine = 0
     position = 0
     startRange = 0
-    endRange = 500
+    endRange = 0
     layout = Layout()
-    def __init__(self, genome=Genome(), flc=FeatureListContainer(), initial_upperCase=True, initial_charsPerLine=50, initial_position=0, initial_startRange=0, initial_endRange=500):
+    def __init__(self, genome=Genome(), flc=FeatureListContainer(), initial_upperCase=True, initial_charsPerLine=20, initial_position=0, initial_startRange=0, initial_endRange=5000):
         self.genome=genome
         self.featureListContainer=flc
         self.upperCase=initial_upperCase
@@ -62,45 +62,26 @@ class GenomeModel(Observable):
         self.setChanged()
     def writeSequence(self, txtctrl):
         txtctrl.SetFont(self.layout.getSequenceFont())
-        # change: wir lassen erstmal das genom bis zur range laufen
-        # TODO: richtige implementation
-        len=self.getEndRange()
-        sequence=self.genome.getSequence()
+        sequence=self.genome.getSequence()[self.startRange:self.endRange]
+        seqLen=len(sequence)
         if self.upperCase:
             sequence=sequence.upper()
         i=0
-        while i + self.charsPerLine <= len:
-            #i mod x, also jede x-te stelle wird nummeriert
-            if(i%200==0):
-                # die null braucht mehr space, da sie ja nur einstellig ist
-                if(i==0):
-                    txtctrl.WriteText(str(i)+"   ")
-                    txtctrl.WriteText(sequence[i:i+self.charsPerLine])
-                    txtctrl.Newline()
-                else:
-                    txtctrl.WriteText(str(i)+" ")
-                    txtctrl.WriteText(sequence[i:i+self.charsPerLine])
-                    txtctrl.Newline()
-            # ansonsten einfach spaces einfuegen, damit alles einheitlich ist
-            else:
-                txtctrl.WriteText("    ")
-                txtctrl.WriteText(sequence[i:i+self.charsPerLine])
+        while i + self.charsPerLine <= seqLen:
+            txtctrl.WriteText(sequence[i:i+self.charsPerLine])
+            # letzte Zeile ohne Newline()
+            if (i + self.charsPerLine < seqLen):
                 txtctrl.Newline()
             i+=self.charsPerLine
-        txtctrl.WriteText(sequence[i:len])
-
-    # change: ORIGINAL panel beschriftung
-    # - vorerst nummerierung im textfeld
-    # TODO: bessere loesung ausdenken
-#    def writeNumeration(self, numTxtctrl, seqTxtctrl):
-#        numTxtctrl.SetFont(self.layout.getNumerationFont())
-#        i=0
-#        number=0
-#        while i<seqTxtctrl.GetNumberOfLines():
-#            numTxtctrl.WriteText(str(number) + "-" + str(number+seqTxtctrl.GetLineLength(i)-1))
-#            numTxtctrl.Newline()
-#            i+=1
-#            number+=self.charsPerLine
+    def writeNumeration(self, numTxtctrl, seqTxtctrl):
+        numTxtctrl.SetFont(self.layout.getNumerationFont())
+        number=self.startRange
+        while numTxtctrl.GetNumberOfLines()<seqTxtctrl.GetNumberOfLines():
+            numTxtctrl.WriteText(str(number) + "-" + str(number+seqTxtctrl.GetLineLength(numTxtctrl.GetNumberOfLines()-1)-1))
+            numTxtctrl.Newline()
+            number+=self.charsPerLine
+        # letzte Zeile ohne Newline()
+        numTxtctrl.WriteText(str(number) + "-" + str(number+seqTxtctrl.GetLineLength(numTxtctrl.GetNumberOfLines()-1)-1))
 
     def writeFeatures(self, txtctrl):
         for iFlist in range(self.featureListContainer.getContainerLength()):

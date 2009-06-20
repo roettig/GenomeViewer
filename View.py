@@ -24,7 +24,7 @@ class MainFrame(wx.Frame):
         wx.Frame.__init__(self, None, -1, "Genome Viewer", size=(self.hsize, self.vsize))
         #self.panel = wx.Panel(self, -1)
         #self.panel.SetSize(size=(self.hsize, self.vsize))
-        
+
         # macht, dass nummerierung noch nicht losgeht, bevor genom geladen ist
         loaded = False
 
@@ -76,8 +76,9 @@ class MainFrame(wx.Frame):
         self.genomemodel.setGenome(self.genome)
         self.genomemodel.setFeatureListContainer(self.container)
         self.genomeview = GenomeView(self.genomemodel, self, -1)
-        if(loaded == True):
-            self.genomeview.write()
+        # brauchen wir das? dafür gibts doch die updateFkt
+        # if(loaded == True):
+        #    self.genomeview.write()
         self.genome.addObserver(self.genomeview)
 
         ### sizer ###
