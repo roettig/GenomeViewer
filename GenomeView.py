@@ -36,3 +36,6 @@ class GenomeView(wx.Panel, IObserver):
         #self.sequenceCtrl.ScrollLines(100)
         self.model.writeSequence(self.sequenceCtrl)
         self.model.writeFeatures(self.sequenceCtrl)
+        #geht zur angegebenen Position
+        self.model.showPos(self.sequenceCtrl)
+        #self.model.showFeature(999, 1352, self.sequenceCtrl)

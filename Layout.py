@@ -15,7 +15,9 @@ class Layout(Observable):
     #Listen-Iterator, der ueber die Farbliste iteriert
     colListIter=iter(colorList)
     typeColDict={}
-    def __init__(self, initial_seqSize=10, initial_numSize=8, initial_bgColor=wx.Color(255, 255, 255), initial_seqColor=wx.Color(0,0,0), initial_numColor=wx.Color(0,0,0)):
+    leftIndent=0
+    lineSpacing=0
+    def __init__(self, initial_seqSize=10, initial_numSize=8, initial_bgColor=wx.Color(255, 255, 255), initial_seqColor=wx.Color(0,0,0), initial_numColor=wx.Color(0,0,0), initial_leftIndent=50, initial_lineSpacing=20):
         self.seqSize=initial_seqSize
         self.numSize=initial_numSize
         self.bgColor=initial_bgColor
@@ -23,6 +25,8 @@ class Layout(Observable):
         self.numColor=initial_numColor
         self.colorList=initial_colorList=['#00FF00', '#0000FF', '#FF0000', '#008000', '#808080' '#FF00FF', '#00FFFF', '#800000', '#808000', '#000080', '#800080', '#008080', '#C0C0C0', '#A52A2A', '#7FFF00']
         self.colListIter=iter(self.colorList)
+        self.leftIndent=initial_leftIndent
+        self.lineSpacing=initial_lineSpacing
     def setSeqSize(self,n):
         self.seqSize=n
         self.setChanged()
@@ -60,14 +64,14 @@ class Layout(Observable):
         rta.SetTextColour(self.seqColor)
         rta.SetBackgroundColour(self.bgColor)
         # leftindent und linespacing wird nicht angezeigt
-        rta.SetLeftIndent(300)
-        rta.SetLineSpacing(500)
+        rta.SetLeftIndent(self.leftIndent)
         return rta
     def getNumTextAttrEx(self):
         rta = rt.RichTextAttr()
         rta.SetFont(self.getNumFont())
         rta.SetTextColour(self.numColor)
         rta.SetBackgroundColour(self.bgColor)
+        rta.SetLineSpacing(self.lineSpacing)
         return rta
     # weist einem Typ eine Farbe zu, falls dieser noch nicht im Dictionary vorhanden
     def addTypeColDict(self, type):
