@@ -23,7 +23,7 @@ class GenomeView(wx.Panel, IObserver):
         self.vsizer.Add(self.hsizer, 1, flag = wx.GROW|wx.EXPAND)
         self.SetSizer(self.vsizer)
 
-    # ?? dafuer gibts doch update-methode
+    # ?? dafuer gibts doch die update-methode
     # wird von view aufgerufen, wenn genom geladen wurde
     # def write(self):
     #    self.model.writeSequence(self.sequenceCtrl)
@@ -33,6 +33,6 @@ class GenomeView(wx.Panel, IObserver):
         # loescht Inhalt der Textfenster
         self.sequenceCtrl.Clear()
         #self.numerationCtrl.Clear()
-
+        #self.sequenceCtrl.ScrollLines(100)
         self.model.writeSequence(self.sequenceCtrl)
         self.model.writeFeatures(self.sequenceCtrl)

@@ -1,4 +1,4 @@
-class Feature():
+class Feature(object):
     """Type of data"""
     id=""
     active=True
