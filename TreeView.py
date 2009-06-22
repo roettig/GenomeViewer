@@ -64,8 +64,7 @@ class TreeView(wx.Panel, IObserver):
 		pass
 
 	def OnActivated(self, evt):
-		item = evt.GetItem()
-		wx.MessageBox(evt.GetString(), self.tree.GetItemPyData(item))
+		pass
 
 	def update(self, source, object):
 		self.tree.DeleteAllItems()

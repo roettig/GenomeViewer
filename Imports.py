@@ -6,6 +6,7 @@ from Genome import Genome
 from FeatureListContainer import FeatureListContainer
 from Feature import Feature
 from FeatureList import FeatureList
+import wx
 
 con = FeatureListContainer()
 genome = Genome()
@@ -23,16 +24,17 @@ class Fasta(object):
         firstchar = currline[0]
         #is file a fasta file
         if firstchar != ">":
-            print"No Fasta file given"
+            wx.MessageBox("No FastA-File given, pleasy try again","fatal import error", style=wx.OK)
             myfasta.close()
         else:
             self.head = currline
             currline = myfasta.readline()
         #read the file up to next header
             while currline != "":
-                currline = myfasta.readline()
                 currline = currline.strip()
                 self.sequence += currline
+                currline = myfasta.readline()
+
                 #print currline
             myfasta.close()
             self.sequence = self.sequence.upper()

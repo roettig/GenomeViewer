@@ -13,6 +13,7 @@ from GenomeModel import GenomeModel
 from IObserver import IObserver
 from TreeView import TreeView
 import Imports
+from Search import Search
 
 class MainFrame(wx.Frame):
 
@@ -60,7 +61,7 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnExit, exit)
 
         openSearch = searchmenu.Append(-1, "regular expression", "Search with regular expressions")
-        #self.Bind(wx.EVT_MENU, self.OnOpenSearch, openSearch)
+        self.Bind(wx.EVT_MENU, self.OnOpenSearch, openSearch)
 
         self.SetMenuBar(menuBar)
 
@@ -132,9 +133,14 @@ class MainFrame(wx.Frame):
             dialog.Destroy()
             #print Imports.con.getPTTContainer()[2].getEnd()
 
-    def OnOpenSearch(self):
-        #wx.MessageBox("Hier regexsearch einfuegen")
-        pass
+    def OnOpenSearch(self,event):
+        dialog = wx.TextEntryDialog(None, "Please enter regular expression here:",
+                                    "regular expression search","",
+                                    style=wx.OK|wx.CANCEL)
+        if dialog.ShowModal() == wx.ID_OK:
+            print "You have entered: %s" % dialog.GetValue()
+            search=Search()
+            search.regexsearch(dialog.GetValue())
 
 if __name__ == "__main__":
     app = wx.PySimpleApp()
