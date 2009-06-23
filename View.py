@@ -65,17 +65,19 @@ class MainFrame(wx.Frame):
 
         self.SetMenuBar(menuBar)
 
-        ### treeview ###
+
         self.container = Imports.con
-        self.treeview = TreeView(self, -1, Imports.con)
+	self.genome = Imports.genome
+        self.genomemodel = GenomeModel()#(self.genome, self.features)
+        self.genomemodel.setGenome(self.genome)
+        self.genomemodel.setFeatureListContainer(self.container)
+	
+	### treeview ###
+        self.treeview = TreeView(self, -1, self.container, self.genomemodel)
         self.container.addObserver(self.treeview)
         #self.treeview.SetSize(size=(self.hsize, self.vsize))
 
         ### genomeview ###
-        self.genome = Imports.genome
-        self.genomemodel = GenomeModel()#(self.genome, self.features)
-        self.genomemodel.setGenome(self.genome)
-        self.genomemodel.setFeatureListContainer(self.container)
         self.genomeview = GenomeView(self.genomemodel, self, -1)
         # brauchen wir das? dafür gibts doch die updateFkt
         # if(loaded == True):
@@ -96,10 +98,11 @@ class MainFrame(wx.Frame):
         self.Close()
 
     def OnOpenGenomeFile(self, event):
-        wildcard = "FastA file (*.fasta) |*.fasta|" \
+        wildcard = "FastA file (*.fna) |*.fna|" \
+		    "FastA file (*.fasta) |*.fasta|" \
                     "FastA file (*.faa) |*.faa|" \
                     "All files (*.*) |*.*|"
-        wildcard=""
+        #wildcard=""
         dialog = wx.FileDialog(None, "Choose a genome-file", os.getcwd(),
                                "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
@@ -112,7 +115,7 @@ class MainFrame(wx.Frame):
     def OnOpenGffAnnotation(self, event):
         wildcard = "GFF file (*.gff) |*.gff|" \
                     "All files (*.*) |*.*|"
-        wildcard=""
+        #wildcard=""
         dialog = wx.FileDialog(None, "Choose an annotation-file", os.getcwd(),
                                "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
@@ -124,7 +127,7 @@ class MainFrame(wx.Frame):
     def OnOpenPttAnnotation(self, event):
         wildcard = "PTT file (*.ptt) |*.ptt|" \
                     "All files (*.*) |*.*|"
-        wildcard=""
+        #wildcard=""
         dialog = wx.FileDialog(None, "Choose an annotation-file", os.getcwd(),
                                "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
@@ -135,7 +138,7 @@ class MainFrame(wx.Frame):
 
     def OnOpenSearch(self,event):
         dialog = wx.TextEntryDialog(None, "Please enter regular expression here:",
-                                    "regular expression search","",
+                                    "Regular Expression Search","",
                                     style=wx.OK|wx.CANCEL)
         if dialog.ShowModal() == wx.ID_OK:
             print "You have entered: %s" % dialog.GetValue()

@@ -4,14 +4,18 @@ import Imports
 from IObserver import IObserver
 #from Observable import Observable
 from FeatureListContainer import FeatureListContainer
+from Genome import Genome
+from GenomeView import GenomeView
+from GenomeModel import GenomeModel
 
 
 class TreeView(wx.Panel, IObserver):
 
-	def __init__(self, parent, id, observed):
+	def __init__(self, parent, id, observed, model):
 
 		wx.Panel.__init__(self, parent, id, style=wx.BORDER_SUNKEN, size=(400, 300))
 
+		self.model = model
 		self.tree = wx.TreeCtrl(self)
 		self.root = self.tree.AddRoot("Features")
 		self.searchResults = self.tree.AppendItem(self.root, "Search Results")
@@ -46,7 +50,7 @@ class TreeView(wx.Panel, IObserver):
 		for item in items:
 		    iid = self.tree.AppendItem(parentItem, item.getType())
 		    self.tree.SetPyData(iid,item)
-		    print item
+		    #print item
 
 	def GetItemText(self, item):
 		if item:
@@ -64,7 +68,26 @@ class TreeView(wx.Panel, IObserver):
 		pass
 
 	def OnActivated(self, evt):
-		pass
+		genome = Imports.genome
+		#model = GenomeModel()
+		item = evt.GetItem()
+		feature = self.tree.GetItemPyData(item)
+		#print model.getStartRange()
+		#print model.getEndRange()
+		
+		#setzt neue position in die mitte des features(bis jetzt nur mit hard-coded range)
+		position = (feature.getStart() + feature.getEnd())/2
+		startpos = max(0, position - 2500)
+		endpos = min(genome.getSequenceLength(), position + 2500)
+		
+		#aktualisiert textview
+		self.model.setRanges(startpos, endpos)
+		print self.model.getStartRange()
+		print self.model.getEndRange()
+		self.model.setPosition(position)
+		print "#", self.model.getPosition()
+		#print model.getEndRange()
+		#model.writeSequence(genome.getSequence()[startpos:endpos])
 
 	def update(self, source, object):
 		self.tree.DeleteAllItems()

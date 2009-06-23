@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # liest das Genom (+Annotationen) und die Nummerierung in die Textfelder
 
 from Genome import Genome
@@ -62,6 +63,10 @@ class GenomeModel(Observable):
     def setEndRange(self, n):
         self.endRange=n
         self.setChanged()
+    def setRanges(self, start ,end):
+        self.startRange = start
+        self.endRange = end
+        self.setChanged()
     def writeSequence(self, txtctrl):
         #print self.genome.getSequence()[0:50]
         if self.upperCase:
@@ -70,6 +75,7 @@ class GenomeModel(Observable):
             sequence=self.genome.getSequence()[self.startRange:self.endRange]
         seqLen=len(sequence)
         numeration=self.startRange
+	print "PENIS", self.endRange
         i=0
         while i+self.charsPerLine <= seqLen:
             txtctrl.BeginStyle(self.layout.getSeqTextAttrEx())
@@ -119,8 +125,8 @@ class GenomeModel(Observable):
                             self.writeFeaturesHelper(txtctrl, start, end, type, description)
     # faerbt Bereiche und ueberspringt Nummerierung
     def writeFeaturesHelper(self, txtctrl, start, end, type, description):
-        print "start1: " + str(start)
-        print "end1: " + str(end)
+        #print "start1: " + str(start)
+        #print "end1: " + str(end)
         rta = rt.RichTextAttr()
         #Farbgebung
         self.layout.addTypeColDict(type)
@@ -134,32 +140,32 @@ class GenomeModel(Observable):
         calc4=(calc2+calc3)%self.charsPerLine
         modStart=self.modifyStartPos(start,txtctrl)
         modEnd=self.modifyEndPos(end, txtctrl)
-        print "calc1: " + str(calc1)
-        print "calc2: " + str(calc2)
-        print "calc3: " + str(calc3)
-        print "calc4: " + str(calc4)
-        print "start2: " + str(modStart)
-        print "end2: " + str(modEnd)
+        #print "calc1: " + str(calc1)
+        #print "calc2: " + str(calc2)
+        #print "calc3: " + str(calc3)
+        #print "calc4: " + str(calc4)
+        #print "start2: " + str(modStart)
+        #print "end2: " + str(modEnd)
         # Anfang: wenn Einfaerbung nicht am Zeilenanfang beginnt
         if calc4!=0:
             if end-start<=calc4:
                 txtctrl.SetStyle((modStart,modEnd), rta)
                 modStart+=modEnd
-                print "if"
+                #print "if"
             else:
                 txtctrl.SetStyle((modStart,modStart+calc4), rta)
                 modStart+=calc4+txtctrl.GetLineLength(1)+2
-                print "else"
+                #print "else"
         # Mitte: faerbt ganze Zeilen
         while modStart+self.charsPerLine<=modEnd:
             txtctrl.SetStyle((modStart,modStart+self.charsPerLine), rta)
             #print str(modStart+self.charsPerLine+txtctrl.GetLineLength(1)+1)
             modStart+=self.charsPerLine+txtctrl.GetLineLength(1)+2
-            print "middle"
+            #print "middle"
         # Ende: faerbt letzte Zeile nicht ganz
         if modEnd-modStart>0:
             txtctrl.SetStyle((modStart,modEnd), rta)
-            print "end"
+            #print "end"
     # wandelt Positionen auf dem Genom in Positionen im Genomtextfeld um
     def modifyStartPos(self, n, txtctrl):
         newN=n-self.startRange
@@ -169,7 +175,7 @@ class GenomeModel(Observable):
         while i <= quot:
             numCount+=txtctrl.GetLineLength(i)
             i+=2
-        print newN+quot+numCount
+        #print newN+quot+numCount
         return newN+quot+numCount
     def modifyEndPos(self, n, txtctrl):
         newN=n-self.startRange
@@ -179,7 +185,7 @@ class GenomeModel(Observable):
         while i < quot:
             numCount+=txtctrl.GetLineLength(i)
             i+=2
-        print str(newN+quot+numCount+1)
+        #print str(newN+quot+numCount+1)
         return newN+quot+numCount+1
     def onUrl(self, evt):
         wx.MessageBox(evt.GetString(), "Description")
