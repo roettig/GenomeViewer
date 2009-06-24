@@ -60,18 +60,21 @@ class MainFrame(wx.Frame):
         exit = file.Append(-1, "Exit", "Exit programm")
         self.Bind(wx.EVT_MENU, self.OnExit, exit)
 
-        openSearch = searchmenu.Append(-1, "regular expression", "Search with regular expressions")
-        self.Bind(wx.EVT_MENU, self.OnOpenSearch, openSearch)
+        openRegExSearch = searchmenu.Append(-1, "regular expression", "Search with regular expressions")
+        self.Bind(wx.EVT_MENU, self.OnOpenRegExSearch, openRegExSearch)
+
+        openGeneSearch = searchmenu.Append(-1, "Gene finding", "Search with sequence string")
+        self.Bind(wx.EVT_MENU, self.OnOpenGeneSearch, openGeneSearch)
 
         self.SetMenuBar(menuBar)
 
 
         self.container = Imports.con
-	self.genome = Imports.genome
+        self.genome = Imports.genome
         self.genomemodel = GenomeModel()#(self.genome, self.features)
         self.genomemodel.setGenome(self.genome)
         self.genomemodel.setFeatureListContainer(self.container)
-	
+
 	### treeview ###
         self.treeview = TreeView(self, -1, self.container, self.genomemodel)
         self.container.addObserver(self.treeview)
@@ -102,7 +105,7 @@ class MainFrame(wx.Frame):
 		    "FastA file (*.fasta) |*.fasta|" \
                     "FastA file (*.faa) |*.faa|" \
                     "All files (*.*) |*.*|"
-        #wildcard=""
+        wildcard=""
         dialog = wx.FileDialog(None, "Choose a genome-file", os.getcwd(),
                                "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
@@ -136,14 +139,25 @@ class MainFrame(wx.Frame):
             dialog.Destroy()
             #print Imports.con.getPTTContainer()[2].getEnd()
 
-    def OnOpenSearch(self,event):
+    def OnOpenRegExSearch(self,event):
         dialog = wx.TextEntryDialog(None, "Please enter regular expression here:",
                                     "Regular Expression Search","",
                                     style=wx.OK|wx.CANCEL)
         if dialog.ShowModal() == wx.ID_OK:
             print "You have entered: %s" % dialog.GetValue()
-            search=Search()
+            search=Search(self.genomemodel)
             search.regexsearch(dialog.GetValue())
+
+    def OnOpenGeneSearch(self,event):
+        dialog = wx.TextEntryDialog(None, "Please enter sequence string here:",
+                                    "Gene finding","",
+                                    style=wx.OK|wx.CANCEL)
+        if dialog.ShowModal() == wx.ID_OK:
+            print "You have entered: %s" % dialog.GetValue()
+            search=Search(self.genomemodel)
+            search.genesearch(dialog.GetValue())
+
+
 
 if __name__ == "__main__":
     app = wx.PySimpleApp()
