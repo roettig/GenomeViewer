@@ -67,6 +67,14 @@ class GenomeModel(Observable):
         self.startRange = start
         self.endRange = end
         self.setChanged()
+    def getSeqFont(self):
+        return self.layout.getSeqFont()
+    def setSeqFont(self, font):
+        self.layout.setSeqFont(font)
+    def getNumFont(self):
+        return self.layout.getNumFont()
+    def setNumFont(self, font):
+        self.layout.setNumFont(font)
     def writeSequence(self, txtctrl):
         #print self.genome.getSequence()[0:50]
         if self.upperCase:

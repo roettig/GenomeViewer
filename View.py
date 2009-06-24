@@ -14,11 +14,12 @@ from IObserver import IObserver
 from TreeView import TreeView
 import Imports
 from Search import Search
+from wx.lib.wordwrap import wordwrap
 
 class MainFrame(wx.Frame):
 
-    hsize = 1024
-    vsize = 800
+    hsize = 800
+    vsize = 600
 
     def __init__ (self):
 
@@ -27,47 +28,10 @@ class MainFrame(wx.Frame):
         #self.panel.SetSize(size=(self.hsize, self.vsize))
 
         # macht, dass nummerierung noch nicht losgeht, bevor genom geladen ist
-        loaded = False
+        # loaded = False
 
         self.CreateStatusBar()
-
-        ### creating the menu ###
-        file = wx.Menu()
-        editmenu = wx.Menu()
-        helpmenu = wx.Menu()
-        searchmenu = wx.Menu()
-        selecmenu = wx.Menu()
-
-        menuBar = wx.MenuBar()
-
-
-        menuBar.Append(file, "File")
-        #menuBar.Append(editmenu, "Edit")
-        menuBar.Append(searchmenu, "Search")
-        menuBar.Append(selecmenu, "Feature Selection")
-        menuBar.Append(helpmenu, "Help")
-
-
-        openGenome = file.Append(-1, "Open genome", "Open new genome-file")
-        self.Bind(wx.EVT_MENU, self.OnOpenGenomeFile, openGenome)
-
-        openGffAnnotation = file.Append(-1, "Open GFF annotation", "Open new gff annotation-file")
-        self.Bind(wx.EVT_MENU, self.OnOpenGffAnnotation, openGffAnnotation)
-
-        openPttAnnotation = file.Append(-1, "Open PTT annotation", "Open new ptt annotation-file")
-        self.Bind(wx.EVT_MENU, self.OnOpenPttAnnotation, openPttAnnotation)
-
-        exit = file.Append(-1, "Exit", "Exit programm")
-        self.Bind(wx.EVT_MENU, self.OnExit, exit)
-
-        openRegExSearch = searchmenu.Append(-1, "regular expression", "Search with regular expressions")
-        self.Bind(wx.EVT_MENU, self.OnOpenRegExSearch, openRegExSearch)
-
-        openGeneSearch = searchmenu.Append(-1, "Gene finding", "Search with sequence string")
-        self.Bind(wx.EVT_MENU, self.OnOpenGeneSearch, openGeneSearch)
-
-        self.SetMenuBar(menuBar)
-
+        self.MakeMenuBar()
 
         self.container = Imports.con
         self.genome = Imports.genome
@@ -97,6 +61,96 @@ class MainFrame(wx.Frame):
         self.Centre()
         self.Show(True)
 
+    ''' creating the menu '''
+    def MakeMenuBar(self):
+
+        ''' menu "File" '''
+        fileMenu = wx.Menu()
+        # menu item "Open Genome"
+        openGenome = fileMenu.Append(-1, "Open genome", "Open new genome-file")
+        self.Bind(wx.EVT_MENU, self.OnOpenGenomeFile, openGenome)
+        # menu item "Open GFF annotation"
+        openGffAnnotation = fileMenu.Append(-1, "Open GFF annotation", "Open new gff annotation-file")
+        self.Bind(wx.EVT_MENU, self.OnOpenGffAnnotation, openGffAnnotation)
+        # menu itm "Open PTT annotation"
+        openPttAnnotation = fileMenu.Append(-1, "Open PTT annotation", "Open new ptt annotation-file")
+        self.Bind(wx.EVT_MENU, self.OnOpenPttAnnotation, openPttAnnotation)
+        fileMenu.AppendSeparator()
+        # menu item "Exit"
+        exit = fileMenu.Append(-1, "Exit", "Exit programm")
+        self.Bind(wx.EVT_MENU, self.OnExit, exit)
+
+        ''' menu "Edit" '''
+        editMenu = wx.Menu()
+
+        ''' menu "SearchMenu" '''
+        searchMenu = wx.Menu()
+        # menu item
+        openRegExSearch = searchMenu.Append(-1, "regular expression", "Search with regular expressions")
+        self.Bind(wx.EVT_MENU, self.OnOpenRegExSearch, openRegExSearch)
+        # menu item
+        openGeneSearch = searchMenu.Append(-1, "Gene finding", "Search with sequence string")
+        self.Bind(wx.EVT_MENU, self.OnOpenGeneSearch, openGeneSearch)
+
+        ''' menu "FeatureSelection" '''
+        featureselectMenu = wx.Menu()
+
+        ''' menu "Properties" '''
+        propertiesMenu = wx.Menu()
+        # menu item
+        setseqfont = propertiesMenu.Append(-1, "Sequence Font", "Set Sequence Font")
+        self.Bind(wx.EVT_MENU, self.OnSetSeqFont, setseqfont)
+        # menu item
+        setnumfont = propertiesMenu.Append(-1, "Numeration Font", "Set Numeration Font")
+        self.Bind(wx.EVT_MENU, self.OnSetNumFont, setnumfont)
+
+        ''' menu "Help" '''
+        helpMenu = wx.Menu()
+        # menu item
+        about = helpMenu.Append(-1, "About", "About GenomeViewer")
+        self.Bind(wx.EVT_MENU, self.OnAbout, about)
+
+        ''' append items to menu bar '''
+        menuBar = wx.MenuBar()
+        menuBar.Append(fileMenu, "File")
+        #menuBar.Append(editMenu, "Edit")
+        menuBar.Append(searchMenu, "Search")
+        menuBar.Append(featureselectMenu, "Feature Selection")
+        menuBar.Append(propertiesMenu, "Properties")
+        menuBar.Append(helpMenu, "Help")
+        self.SetMenuBar(menuBar)
+
+    def OnSetSeqFont(self, evt):
+        dlg = wx.FontDialog(self, wx.FontData())
+        dlg.GetFontData().SetInitialFont(self.genomemodel.getSeqFont())
+        if dlg.ShowModal() == wx.ID_OK:
+            self.genomemodel.setSeqFont(dlg.GetFontData().GetChosenFont())
+        dlg.Destroy()
+
+    def OnSetNumFont(self, evt):
+        dlg = wx.FontDialog(self, wx.FontData())
+        dlg.GetFontData().SetInitialFont(self.genomemodel.getNumFont())
+        if dlg.ShowModal() == wx.ID_OK:
+            self.genomemodel.setNumFont(dlg.GetFontData().GetChosenFont())
+        dlg.Destroy()
+
+    def OnAbout(self, event):
+        info = wx.AboutDialogInfo()
+        info.Name = "GenomeViewer"
+        info.Version = "1.0"
+        info.Copyright = "(C) 2009"
+        info.Description = wordwrap(
+            "A \"GenomeViewer\" is a software program that views genome sequences ",
+            350, wx.ClientDC(self))
+        info.WebSite = ("http://www.uni-tuebingen.de", "Our home page")
+        info.Developers = [ "Mirco",
+                            "Phil",
+                            "Julian",
+                            "Matze" ]
+        licenseText = "XyZ" * 250
+        info.Licence = wordwrap(licenseText, 500, wx.ClientDC(self))
+        wx.AboutBox(info)
+
     def OnExit(self, event):
         self.Close()
 
@@ -113,7 +167,7 @@ class MainFrame(wx.Frame):
             fasta.importfasta(dialog.GetPath())
             dialog.Destroy()
 
-        self.loaded = True
+        # self.loaded = True
 
     def OnOpenGffAnnotation(self, event):
         wildcard = "GFF file (*.gff) |*.gff|" \
