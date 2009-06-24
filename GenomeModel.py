@@ -19,7 +19,7 @@ class GenomeModel(Observable):
     startRange = 0
     endRange = 0
     layout = Layout()
-    def __init__(self, genome=Genome(), flc=FeatureListContainer(), initial_upperCase=True, initial_charsPerLine=50, initial_position=3520, initial_startRange=0, initial_endRange=5000):
+    def __init__(self, genome=Genome(), flc=FeatureListContainer(), initial_upperCase=True, initial_charsPerLine=100, initial_position=3520, initial_startRange=0, initial_endRange=5000):
         self.genome=genome
         self.featureListContainer=flc
         self.upperCase=initial_upperCase

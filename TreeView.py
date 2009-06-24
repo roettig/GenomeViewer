@@ -25,11 +25,6 @@ class TreeView(wx.Panel, IObserver):
 		hbox = wx.BoxSizer(wx.HORIZONTAL)
 		hbox.Add(self.tree, 1, flag= wx.GROW | wx.EXPAND)
 
-		#self.treeModel = TreeModel()
-		#self.treeModel.addObserver(self)
-
-		#print model.GetImportedLabels()
-
 		self.Bind(wx.EVT_TREE_ITEM_EXPANDED,
 			self.OnItemExpanded,
 			self.tree)
@@ -42,7 +37,7 @@ class TreeView(wx.Panel, IObserver):
 		self.Bind(wx.EVT_TREE_ITEM_ACTIVATED,
 			self.OnActivated,
 			self.tree)
-		#self.tree.Expand(root)
+		self.Bind(wx.EVT_TREE_ITEM_RIGHT_CLICK, self.OnTreeRightClick, self.tree)
 		self.SetSizer(hbox)
 		self.Show(True)
 
@@ -50,13 +45,22 @@ class TreeView(wx.Panel, IObserver):
 		for item in items:
 		    iid = self.tree.AppendItem(parentItem, item.getType())
 		    self.tree.SetPyData(iid,item)
-		    #print item
+
 
 	def GetItemText(self, item):
 		if item:
 			return self.tree.GetItemText(item)
 		else:
 			return ""
+	def OnTreeRightClick(self, evt):
+		item = evt.GetItem()
+		feature = self.tree.GetItemPyData(item)
+		if feaure.getActive() == True:
+			feature.setActive(False)
+		else:
+			feature.setActive(True)
+		Imports.con.setChanged()
+
 
 	def OnItemExpanded(self, evt):
 		pass
@@ -69,25 +73,18 @@ class TreeView(wx.Panel, IObserver):
 
 	def OnActivated(self, evt):
 		genome = Imports.genome
-		#model = GenomeModel()
 		item = evt.GetItem()
 		feature = self.tree.GetItemPyData(item)
-		#print model.getStartRange()
-		#print model.getEndRange()
-		
+
 		#setzt neue position in die mitte des features(bis jetzt nur mit hard-coded range)
 		position = (feature.getStart() + feature.getEnd())/2
 		startpos = max(0, position - 2500)
 		endpos = min(genome.getSequenceLength(), position + 2500)
-		
+
 		#aktualisiert textview
 		self.model.setRanges(startpos, endpos)
-		print self.model.getStartRange()
-		print self.model.getEndRange()
 		self.model.setPosition(position)
-		print "#", self.model.getPosition()
-		#print model.getEndRange()
-		#model.writeSequence(genome.getSequence()[startpos:endpos])
+
 
 	def update(self, source, object):
 		self.tree.DeleteAllItems()

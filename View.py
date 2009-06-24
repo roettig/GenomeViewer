@@ -16,6 +16,7 @@ from TreeView import TreeView
 import Imports
 from Search import Search
 from wx.lib.wordwrap import wordwrap
+from sys import platform
 
 class MainFrame(wx.Frame):
 
@@ -54,7 +55,7 @@ class MainFrame(wx.Frame):
 
 	### genomebar ###
 	self.genomebar = GenomeBar(self, -1)
-	
+
         ### sizer ###
         #hbox = wx.BoxSizer(wx.HORIZONTAL)
         #hbox.Add(self.treeview, 1, wx.ALIGN_LEFT | wx.ALL, 5)
@@ -72,10 +73,10 @@ class MainFrame(wx.Frame):
         self.Centre()
         self.Show(True)
 
-    ''' creating the menu '''
-    def MakeMenuBar(self):
 
-        ''' menu "File" '''
+    def MakeMenuBar(self):
+        ''' creating the menu '''
+        #menu "File
         fileMenu = wx.Menu()
         # menu item "Open Genome"
         openGenome = fileMenu.Append(-1, "Open genome", "Open new genome-file")
@@ -91,10 +92,10 @@ class MainFrame(wx.Frame):
         exit = fileMenu.Append(-1, "Exit", "Exit programm")
         self.Bind(wx.EVT_MENU, self.OnExit, exit)
 
-        ''' menu "Edit" '''
+        #menu "Edit
         editMenu = wx.Menu()
 
-        ''' menu "SearchMenu" '''
+        #menu SearchMenu
         searchMenu = wx.Menu()
         # menu item
         openRegExSearch = searchMenu.Append(-1, "regular expression", "Search with regular expressions")
@@ -103,10 +104,10 @@ class MainFrame(wx.Frame):
         openGeneSearch = searchMenu.Append(-1, "Gene finding", "Search with sequence string")
         self.Bind(wx.EVT_MENU, self.OnOpenGeneSearch, openGeneSearch)
 
-        ''' menu "FeatureSelection" '''
+        #menu FeatureSelection
         featureselectMenu = wx.Menu()
 
-        ''' menu "Properties" '''
+        #menu Properties
         propertiesMenu = wx.Menu()
         # menu item
         setseqfont = propertiesMenu.Append(-1, "Sequence Font", "Set Sequence Font")
@@ -115,13 +116,17 @@ class MainFrame(wx.Frame):
         setnumfont = propertiesMenu.Append(-1, "Numeration Font", "Set Numeration Font")
         self.Bind(wx.EVT_MENU, self.OnSetNumFont, setnumfont)
 
-        ''' menu "Help" '''
+        #menu Help
         helpMenu = wx.Menu()
         # menu item
         about = helpMenu.Append(-1, "About", "About GenomeViewer")
         self.Bind(wx.EVT_MENU, self.OnAbout, about)
 
-        ''' append items to menu bar '''
+        #NCBI
+        stuff = helpMenu.Append(-1, "Stuff", "Get more Stuff to View")
+        self.Bind(wx.EVT_MENU, self.OnStuff, stuff)
+
+        #append items to menu bar
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "File")
         #menuBar.Append(editMenu, "Edit")
@@ -158,7 +163,7 @@ class MainFrame(wx.Frame):
                             "Phil",
                             "Julian",
                             "Matze" ]
-        licenseText = "XyZ" * 250
+        licenseText = "Everybody is free, so everything is free...."
         info.Licence = wordwrap(licenseText, 500, wx.ClientDC(self))
         wx.AboutBox(info)
 
@@ -166,11 +171,10 @@ class MainFrame(wx.Frame):
         self.Close()
 
     def OnOpenGenomeFile(self, event):
-        wildcard = "FastA file (*.fna) |*.fna|" \
-		    "FastA file (*.fasta) |*.fasta|" \
-                    "FastA file (*.faa) |*.faa|" \
-                    "All files (*.*) |*.*|"
-        #wildcard=""
+        if platform == "win32":
+            wildcard = ""
+        else:
+            wildcard="*"
         dialog = wx.FileDialog(None, "Choose a genome-file", os.getcwd(),
                                "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
@@ -181,10 +185,11 @@ class MainFrame(wx.Frame):
         # self.loaded = True
 
     def OnOpenGffAnnotation(self, event):
-        wildcard = "GFF file (*.gff) |*.gff|" \
-                    "All files (*.*) |*.*|"
-        #wildcard=""
-        dialog = wx.FileDialog(None, "Choose an annotation-file", os.getcwd(),
+        if platform == "win32":
+            wildcard = ""
+        else:
+            wildcard="*"
+        dialog = wx.FileDialog(None, "Choose an GFF-annotation-file", os.getcwd(),
                                "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
             gff = Imports.Gff()
@@ -193,10 +198,11 @@ class MainFrame(wx.Frame):
             #print Imports.con.getGFFContainer()[2].getEnd()
 
     def OnOpenPttAnnotation(self, event):
-        wildcard = "PTT file (*.ptt) |*.ptt|" \
-                    "All files (*.*) |*.*|"
-        #wildcard=""
-        dialog = wx.FileDialog(None, "Choose an annotation-file", os.getcwd(),
+        if platform == "win32":
+            wildcard = ""
+        else:
+            wildcard="*"
+        dialog = wx.FileDialog(None, "Choose an PTT-annotation-file", os.getcwd(),
                                "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
             ptt = Imports.Ptt()
@@ -221,6 +227,15 @@ class MainFrame(wx.Frame):
             print "You have entered: %s" % dialog.GetValue()
             search=Search(self.genomemodel)
             search.genesearch(dialog.GetValue())
+
+    def OnStuff(self,event):
+        info = wx.AboutDialogInfo()
+        info.Name = "NCBI"
+        info.Description = wordwrap(
+            "to get more crazy stuff for GenView....click",
+            350, wx.ClientDC(self))
+        info.WebSite = ("http://www.ncbi.nlm.nih.gov/", "Homepage of NCBI")
+        wx.AboutBox(info)
 
 
 
