@@ -17,11 +17,12 @@ class Search(object):
         container = Imports.con
         flist = []
         flist.append(re.findall(regex, genome.getSequence() , re.I))
-        #print flist
+        print flist
 
 
     def genesearch(self, patterns):
         """search a gene by entering a sequence"""
+	patterns.strip()
         genome = Imports.genome
         searchstring = genome.getSequence()
         pos = searchstring.index(patterns)

@@ -10,6 +10,7 @@ from FeatureListContainer import FeatureListContainer
 from Genome import Genome
 from GenomeView import GenomeView
 from GenomeModel import GenomeModel
+from GenomeBar import GenomeBar
 from IObserver import IObserver
 from TreeView import TreeView
 import Imports
@@ -51,13 +52,23 @@ class MainFrame(wx.Frame):
         #    self.genomeview.write()
         self.genome.addObserver(self.genomeview)
 
+	### genomebar ###
+	self.genomebar = GenomeBar(self, -1)
+	
         ### sizer ###
-        hbox = wx.BoxSizer(wx.HORIZONTAL)
-        hbox.Add(self.treeview, 1, wx.EXPAND | wx.ALL, 5)
-        hbox.Add(self.genomeview, 1, wx.EXPAND | wx.ALL, 5)
+        #hbox = wx.BoxSizer(wx.HORIZONTAL)
+        #hbox.Add(self.treeview, 1, wx.ALIGN_LEFT | wx.ALL, 5)
+        #box.Add(self.genomeview, 1, wx.ALIGN_RIGHT | wx.ALL, 5)
+	sizer = wx.GridBagSizer(15, 20)
+        sizer.Add(self.treeview, (0, 0), (15, 5), wx.EXPAND | wx.LEFT | wx.TOP | wx.BOTTOM , 5)
+        sizer.Add(self.genomeview, (0, 5),(12, 15), wx.EXPAND | wx.RIGHT | wx.TOP , 5)
+	sizer.Add(self.genomebar, (12, 5),(3, 15), wx.EXPAND | wx.RIGHT | wx.BOTTOM , 5)
 
-        #hbox.Add(self.genomeview, 1, wx.EXPAND | wx.ALL, 5)
-        self.SetSizer(hbox)
+        sizer.AddGrowableCol(19)
+	sizer.AddGrowableRow(10)
+        #sizer.AddGrowableRow(14)
+        self.SetSizerAndFit(sizer)
+
         self.Centre()
         self.Show(True)
 
@@ -159,7 +170,7 @@ class MainFrame(wx.Frame):
 		    "FastA file (*.fasta) |*.fasta|" \
                     "FastA file (*.faa) |*.faa|" \
                     "All files (*.*) |*.*|"
-        wildcard=""
+        #wildcard=""
         dialog = wx.FileDialog(None, "Choose a genome-file", os.getcwd(),
                                "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
