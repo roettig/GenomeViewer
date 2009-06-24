@@ -75,6 +75,7 @@ class GenomeModel(Observable):
             sequence=self.genome.getSequence()[self.startRange:self.endRange]
         seqLen=len(sequence)
         numeration=self.startRange
+	print "PENIS", self.endRange
         i=0
         while i+self.charsPerLine <= seqLen:
             txtctrl.BeginStyle(self.layout.getSeqTextAttrEx())
