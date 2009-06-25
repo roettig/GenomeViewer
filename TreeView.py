@@ -55,7 +55,7 @@ class TreeView(wx.Panel, IObserver):
 	def OnTreeRightClick(self, evt):
 		item = evt.GetItem()
 		feature = self.tree.GetItemPyData(item)
-		if feaure.getActive() == True:
+		if feature.getActive() == True:
 			feature.setActive(False)
 		else:
 			feature.setActive(True)

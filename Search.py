@@ -22,7 +22,7 @@ class Search(object):
 
     def genesearch(self, patterns):
         """search a gene by entering a sequence"""
-	patterns.strip()
+        patterns.strip()
         genome = Imports.genome
         searchstring = genome.getSequence()
         pos = searchstring.index(patterns)

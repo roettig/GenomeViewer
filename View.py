@@ -17,6 +17,7 @@ import Imports
 from Search import Search
 from wx.lib.wordwrap import wordwrap
 from sys import platform
+from CheckBoxFrame import CheckBoxFrame
 
 class MainFrame(wx.Frame):
 
@@ -41,7 +42,7 @@ class MainFrame(wx.Frame):
         self.genomemodel.setGenome(self.genome)
         self.genomemodel.setFeatureListContainer(self.container)
 
-	### treeview ###
+	    ### treeview ###
         self.treeview = TreeView(self, -1, self.container, self.genomemodel)
         self.container.addObserver(self.treeview)
         #self.treeview.SetSize(size=(self.hsize, self.vsize))
@@ -50,23 +51,24 @@ class MainFrame(wx.Frame):
         self.genomeview = GenomeView(self.genomemodel, self, -1)
         # brauchen wir das? dafür gibts doch die updateFkt
         # if(loaded == True):
-        #    self.genomeview.write()
+        # self.genomeview.write()
         self.genome.addObserver(self.genomeview)
 
-	### genomebar ###
-	self.genomebar = GenomeBar(self, -1)
-
+	    ### genomebar ###
+        self.genomebar = GenomeBar(self,-1)
         ### sizer ###
         #hbox = wx.BoxSizer(wx.HORIZONTAL)
         #hbox.Add(self.treeview, 1, wx.ALIGN_LEFT | wx.ALL, 5)
         #box.Add(self.genomeview, 1, wx.ALIGN_RIGHT | wx.ALL, 5)
-	sizer = wx.GridBagSizer(15, 20)
+
+        sizer = wx.GridBagSizer(15,20)
         sizer.Add(self.treeview, (0, 0), (15, 5), wx.EXPAND | wx.LEFT | wx.TOP | wx.BOTTOM , 5)
         sizer.Add(self.genomeview, (0, 5),(12, 15), wx.EXPAND | wx.RIGHT | wx.TOP , 5)
-	sizer.Add(self.genomebar, (12, 5),(3, 15), wx.EXPAND | wx.RIGHT | wx.BOTTOM , 5)
+        sizer.Add(self.genomebar, (12, 5),(3, 15), wx.EXPAND | wx.RIGHT | wx.BOTTOM , 5)
 
         sizer.AddGrowableCol(19)
-	sizer.AddGrowableRow(10)
+        sizer.AddGrowableRow(10)
+
         #sizer.AddGrowableRow(14)
         self.SetSizerAndFit(sizer)
 
@@ -94,19 +96,24 @@ class MainFrame(wx.Frame):
 
         #menu "Edit
         editMenu = wx.Menu()
+        edit = editMenu.Append(-1, "Edit", "Edit Feature Selection")
+        self.Bind(wx.EVT_MENU, self.OnOpenCheckFrame)
+
+
 
         #menu SearchMenu
         searchMenu = wx.Menu()
         # menu item
         openRegExSearch = searchMenu.Append(-1, "regular expression", "Search with regular expressions")
         self.Bind(wx.EVT_MENU, self.OnOpenRegExSearch, openRegExSearch)
+
         # menu item
         openGeneSearch = searchMenu.Append(-1, "Gene finding", "Search with sequence string")
         self.Bind(wx.EVT_MENU, self.OnOpenGeneSearch, openGeneSearch)
 
-        #menu FeatureSelection
-        featureselectMenu = wx.Menu()
 
+
+        #self.Bind(wx.EVT_MENU, self.onOpenFeatureSelection, openFeatureSelection)
         #menu Properties
         propertiesMenu = wx.Menu()
         # menu item
@@ -129,12 +136,17 @@ class MainFrame(wx.Frame):
         #append items to menu bar
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "File")
-        #menuBar.Append(editMenu, "Edit")
+        menuBar.Append(editMenu, "Edit")
         menuBar.Append(searchMenu, "Search")
-        menuBar.Append(featureselectMenu, "Feature Selection")
+        #menuBar.Append(featureselectMenu, "Feature Selection")
         menuBar.Append(propertiesMenu, "Properties")
         menuBar.Append(helpMenu, "Help")
         self.SetMenuBar(menuBar)
+
+
+    def OnOpenCheckFrame(self, evt):
+        check = CheckBoxFrame()
+
 
     def OnSetSeqFont(self, evt):
         dlg = wx.FontDialog(self, wx.FontData())
