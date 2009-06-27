@@ -6,9 +6,12 @@ from GenomeModel import GenomeModel
 
 class GenomeView(wx.Panel, IObserver):
     """erstellt Textfelder, ruft Write-Methoden auf und ordnet Textfelder in Boxsizer an"""
-    def __init__(self, model, parent, id):# *args, **kwargs):
+    def __init__(self, model, *args, **kwargs):
+        
+        wx.Panel.__init__(self, style=wx.BORDER_SUNKEN, *args, **kwargs)  
+    #def __init__(self, model, parent, id):# *args, **kwargs):
         #super(GenomeView,self).__init__(*args, **kwargs)
-        wx.Panel.__init__(self, parent, id, style=wx.BORDER_SUNKEN, size=(400, 300))
+        #wx.Panel.__init__(self, parent, id, style=wx.BORDER_SUNKEN, size=(400, 300))
         self.model = model
 
         # TE_CENTER und TE_RIGHT wird nicht umgesetzt, ka wieso

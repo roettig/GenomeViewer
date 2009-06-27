@@ -10,13 +10,16 @@ from GenomeModel import GenomeModel
 
 
 class TreeView(wx.Panel, IObserver):
+	
+	def __init__(self, observed, model, *args, **kwargs):
+		
+		wx.Panel.__init__(self, style=wx.BORDER_SUNKEN, *args, **kwargs)    
+	#def __init__(self, parent, id, observed, model):
 
-	def __init__(self, parent, id, observed, model):
-
-		wx.Panel.__init__(self, parent, id, style=wx.BORDER_SUNKEN, size=(400, 300))
+		#wx.Panel.__init__(self, parent, id, style=wx.BORDER_SUNKEN, size=(400, 300))
 
 		self.model = model
-		self.tree = wx.TreeCtrl(self)
+		self.tree = wx.TreeCtrl(self, -1)
 		self.root = self.tree.AddRoot("Features")
 		self.searchResults = self.tree.AppendItem(self.root, "Search Results")
 		self.ptt = self.tree.AppendItem(self.root, "PTT-Imports")

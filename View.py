@@ -16,6 +16,7 @@ from TreeView import TreeView
 import Imports
 from Search import Search
 from wx.lib.wordwrap import wordwrap
+from ProportionalSplitter import ProportionalSplitter
 from sys import platform
 from CheckBoxFrame import CheckBoxFrame
 
@@ -41,36 +42,35 @@ class MainFrame(wx.Frame):
         self.genomemodel = GenomeModel()#(self.genome, self.features)
         self.genomemodel.setGenome(self.genome)
         self.genomemodel.setFeatureListContainer(self.container)
-
+        
+        ### splitter ###
+        self.splitLeft = ProportionalSplitter(self, -1, 0.33)
+        self.splitRight = ProportionalSplitter(self.splitLeft, -1, 0.9)
+        
 	    ### treeview ###
-        self.treeview = TreeView(self, -1, self.container, self.genomemodel)
+        self.treeview = TreeView(self.container, self.genomemodel, self.splitLeft)
         self.container.addObserver(self.treeview)
-        #self.treeview.SetSize(size=(self.hsize, self.vsize))
 
         ### genomeview ###
-        self.genomeview = GenomeView(self.genomemodel, self, -1)
-        # brauchen wir das? dafür gibts doch die updateFkt
-        # if(loaded == True):
-        # self.genomeview.write()
+        self.genomeview = GenomeView(self.genomemodel, self.splitRight)
         self.genome.addObserver(self.genomeview)
 
 	    ### genomebar ###
-        self.genomebar = GenomeBar(self,-1)
+        self.genomebar = GenomeBar(self.splitRight)
+        
+        self.splitLeft.SplitVertically(self.treeview,self.splitRight)
+        self.splitRight.SplitHorizontally(self.genomeview, self.genomebar)
+
         ### sizer ###
-        #hbox = wx.BoxSizer(wx.HORIZONTAL)
-        #hbox.Add(self.treeview, 1, wx.ALIGN_LEFT | wx.ALL, 5)
-        #box.Add(self.genomeview, 1, wx.ALIGN_RIGHT | wx.ALL, 5)
-
-        sizer = wx.GridBagSizer(15,20)
-        sizer.Add(self.treeview, (0, 0), (15, 5), wx.EXPAND | wx.LEFT | wx.TOP | wx.BOTTOM , 5)
-        sizer.Add(self.genomeview, (0, 5),(12, 15), wx.EXPAND | wx.RIGHT | wx.TOP , 5)
-        sizer.Add(self.genomebar, (12, 5),(3, 15), wx.EXPAND | wx.RIGHT | wx.BOTTOM , 5)
-
-        sizer.AddGrowableCol(19)
-        sizer.AddGrowableRow(10)
-
-        #sizer.AddGrowableRow(14)
-        self.SetSizerAndFit(sizer)
+#        sizer = wx.GridBagSizer(15,20)
+#        sizer.Add(self.treeview, (0, 0), (15, 5), wx.EXPAND | wx.LEFT | wx.TOP | wx.BOTTOM , 5)
+#        sizer.Add(self.genomeview, (0, 5),(12, 15), wx.EXPAND | wx.RIGHT | wx.TOP , 5)
+#        sizer.Add(self.genomebar, (12, 5),(3, 15), wx.EXPAND | wx.RIGHT | wx.BOTTOM , 5)
+#
+#        sizer.AddGrowableCol(19)
+#        sizer.AddGrowableRow(10)
+#
+#        self.SetSizerAndFit(sizer)
 
         self.Centre()
         self.Show(True)
@@ -83,12 +83,13 @@ class MainFrame(wx.Frame):
         # menu item "Open Genome"
         openGenome = fileMenu.Append(-1, "Open genome", "Open new genome-file")
         self.Bind(wx.EVT_MENU, self.OnOpenGenomeFile, openGenome)
+        # menu item "Open PTT annotation"
+        openPttAnnotation = fileMenu.Append(-1, "Open PTT annotation", "Open new ptt annotation-file")
+        self.Bind(wx.EVT_MENU, self.OnOpenPttAnnotation, openPttAnnotation)
         # menu item "Open GFF annotation"
         openGffAnnotation = fileMenu.Append(-1, "Open GFF annotation", "Open new gff annotation-file")
         self.Bind(wx.EVT_MENU, self.OnOpenGffAnnotation, openGffAnnotation)
-        # menu itm "Open PTT annotation"
-        openPttAnnotation = fileMenu.Append(-1, "Open PTT annotation", "Open new ptt annotation-file")
-        self.Bind(wx.EVT_MENU, self.OnOpenPttAnnotation, openPttAnnotation)
+
         fileMenu.AppendSeparator()
         # menu item "Exit"
         exit = fileMenu.Append(-1, "Exit", "Exit programm")
@@ -97,7 +98,7 @@ class MainFrame(wx.Frame):
         #menu "Edit
         editMenu = wx.Menu()
         edit = editMenu.Append(-1, "Edit", "Edit Feature Selection")
-        self.Bind(wx.EVT_MENU, self.OnOpenCheckFrame)
+        self.Bind(wx.EVT_MENU, self.OnOpenCheckFrame, edit)
 
 
 
