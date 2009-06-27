@@ -56,7 +56,7 @@ class MainFrame(wx.Frame):
         self.genome.addObserver(self.genomeview)
 
 	    ### genomebar ###
-        self.genomebar = GenomeBar(self.splitRight)
+        self.genomebar = GenomeBar(self.genomemodel, self.splitRight)
         
         self.splitLeft.SplitVertically(self.treeview,self.splitRight)
         self.splitRight.SplitHorizontally(self.genomeview, self.genomebar)

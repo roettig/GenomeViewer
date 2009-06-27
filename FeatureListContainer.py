@@ -24,7 +24,7 @@ class FeatureListContainer(Observable):
     def addGFFList(self, gfflist):
         self.featureLists[1] = gfflist
         self.setChanged()
-        print len(self.featureLists[1])
+        #print len(self.featureLists[1])
 
     """gets and sets attributes of FeatureList"""
     def getFlistActive(self, i):
@@ -40,7 +40,7 @@ class FeatureListContainer(Observable):
     def getPTTList(self):
         return self.featureLists[0]
     def getGFFList(self):
-        print len(self.featureLists[1])
+        #print len(self.featureLists[1])
         return self.featureLists[1]
 
     """ gets and sets attributes of Features """
