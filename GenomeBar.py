@@ -69,6 +69,9 @@ class GenomeBar(wx.Panel, Observable):
 
         dc = wx.ClientDC(self)
         width, heigth = self.GetSize()
+        dc.SetBrush(wx.Brush('#ffffff'))
+        dc.SetPen(wx.Pen('#ffffff'))
+        dc.DrawRectangle(0, 0, width, heigth)
         margin = 10
 
         #brush = wx.BrushFromBitmap(wx.Bitmap('GenomeBar.jpg'))

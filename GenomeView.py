@@ -42,3 +42,6 @@ class GenomeView(wx.Panel, IObserver):
         #geht zur angegebenen Position
         self.model.showPos(self.sequenceCtrl)
         #self.model.showFeature(999, 1352, self.sequenceCtrl)
+
+    def getRtc(self):
+        return self.sequenceCtrl

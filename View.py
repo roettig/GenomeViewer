@@ -19,6 +19,7 @@ from wx.lib.wordwrap import wordwrap
 from ProportionalSplitter import ProportionalSplitter
 from sys import platform
 from CheckBoxFrame import CheckBoxFrame
+import wx.richtext as rt
 
 class MainFrame(wx.Frame):
 
@@ -91,9 +92,13 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnOpenGffAnnotation, openGffAnnotation)
 
         fileMenu.AppendSeparator()
-        #saveTxt = fileMenu.Append(-1, "Save Text", "Saves Sequences In Curren Format")
-        #self.Bind(wx.EVT_MENU, self.OnSaveTxt, saveTxt)
-        #fileMenu.AppendSeparator()
+
+        saveTxt = fileMenu.Append(-1, "Save Text", "Saves Sequence As Shown In The Text Field")
+        self.Bind(wx.EVT_MENU, self.OnSaveTxt, saveTxt)
+        saveTxtAs = fileMenu.Append(-1, "Save Text As...", "Saves Sequence As Shown In The Text Field")
+        self.Bind(wx.EVT_MENU, self.OnSaveTxtAs, saveTxtAs)
+
+        fileMenu.AppendSeparator()
         # menu item "Exit"
         exit = fileMenu.Append(-1, "Exit", "Exit programm")
         self.Bind(wx.EVT_MENU, self.OnExit, exit)
@@ -169,6 +174,27 @@ class MainFrame(wx.Frame):
         menuBar.Append(helpMenu, "Help")
         self.SetMenuBar(menuBar)
 
+
+    def OnSaveTxt(self, evt):
+        if not self.genomeview.getRtc().GetFilename():
+            self.OnSaveTxtAs(evt)
+            return
+        self.genomeview.getRtc().SaveFile()
+    def OnSaveTxtAs(self, evt):
+        wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
+
+        dlg = wx.FileDialog(self, "Choose a filename",
+                            wildcard=wildcard,
+                            style=wx.SAVE)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            if path:
+                fileType = types[dlg.GetFilterIndex()]
+                ext = rt.RichTextBuffer.FindHandlerByType(fileType).GetExtension()
+                if not path.endswith(ext):
+                    path += '.' + ext
+                self.genomeview.getRtc().SaveFile(path, fileType)
+        dlg.Destroy()
     def OnUpperCase(self, evt):
         self.genomemodel.changeUpperCase()
     def OnUpdateUpperCase(self, evt):
@@ -237,7 +263,7 @@ class MainFrame(wx.Frame):
         wx.AboutBox(info)
 
     def OnExit(self, event):
-        self.Close()
+        self.Close(True)
 
     def OnOpenGenomeFile(self, event):
         if platform == "win32":
