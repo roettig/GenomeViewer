@@ -13,16 +13,14 @@ from random import randrange
 class GenomeModel(Observable):
     genome = Genome()
     featureListContainer = FeatureListContainer()
-    upperCase = True
     charsPerLine = 0
     position = 0
     startRange = 0
     endRange = 0
     layout = Layout()
-    def __init__(self, genome=Genome(), flc=FeatureListContainer(), initial_upperCase=True, initial_charsPerLine=100, initial_position=3520, initial_startRange=0, initial_endRange=5000):
+    def __init__(self, genome=Genome(), flc=FeatureListContainer(), initial_charsPerLine=50, initial_position=3520, initial_startRange=0, initial_endRange=5000):
         self.genome=genome
         self.featureListContainer=flc
-        self.upperCase=initial_upperCase
         self.charsPerLine=initial_charsPerLine
         self.position=initial_position
         self.startRange=initial_startRange
@@ -37,11 +35,6 @@ class GenomeModel(Observable):
         return self.featureListContainer
     def setFeatureListContainer(self, flc):
         self.featureListContainer=flc
-        self.setChanged()
-    def getUpperCase(self):
-        return self.upperCase
-    def setUpperCase(self, bool):
-        self.upperCase=bool
         self.setChanged()
     def getCharsPerLine(self):
         return self.charsPerLine
@@ -67,20 +60,74 @@ class GenomeModel(Observable):
         self.startRange = start
         self.endRange = end
         self.setChanged()
-    def getSeqFont(self):
-        return self.layout.getSeqFont()
-    def setSeqFont(self, font):
-        self.layout.setSeqFont(font)
-    def getNumFont(self):
-        return self.layout.getNumFont()
-    def setNumFont(self, font):
-        self.layout.setNumFont(font)
+    def resetLayout(self):
+        new = Layout()
+        self.layout = Layout()
+        self.setChanged()
+    def getNumSize(self):
+        return self.layout.getNumSize()
+    def incNumSize(self, int):
+        numsize=self.layout.getNumSize()
+        self.layout.setNumSize(numsize+int)
+    def decNumSize(self, int):
+        numsize=self.layout.getNumSize()
+        self.layout.setNumSize(numsize-int)
+    def getSeqSize(self):
+        return self.layout.getSeqSize();
+    def incSeqSize(self, int):
+        seqsize=self.layout.getSeqSize()
+        self.layout.setSeqSize(seqsize+int)
+    def decSeqSize(self, int):
+        seqsize=self.layout.getSeqSize()
+        self.layout.setSeqSize(seqsize-int)
+    def isItalic(self):
+        return self.layout.getSeqStyle() == wx.ITALIC
+    def isBold(self):
+        return self.layout.getSeqWeight() == wx.BOLD
+    def changeSeqWeight(self):
+        if self.layout.getSeqWeight()== wx.NORMAL:
+            self.layout.setSeqWeight(wx.BOLD)
+        else:
+            self.layout.setSeqWeight(wx.NORMAL)
+    def changeSeqStyle(self):
+        if self.layout.getSeqStyle()== wx.NORMAL:
+            self.layout.setSeqStyle(wx.ITALIC)
+        else:
+            self.layout.setSeqStyle(wx.NORMAL)
+    def increaseLineSp(self, int):
+        lp=self.layout.getLineSpacing()
+        self.layout.setLineSpacing(lp+int)
+    def decreaseLineSp(self, int):
+        lp=self.layout.getLineSpacing()
+        self.layout.setLineSpacing(lp-int)
+    def indentMore(self, int):
+        indent=self.layout.getLeftIndent()
+        self.layout.setLeftIndent(indent+int)
+    def indentLess(self, int):
+        indent=self.layout.getLeftIndent()
+        self.layout.setLeftIndent(indent-int)
+    def setSeqColor(self, color):
+        self.layout.setSeqColor(color)
+    def getSeqColor(self):
+        return self.layout.getSeqColor()
+    def setNumColor(self, color):
+        self.layout.setNumColor(color)
+    def getNumColor(self):
+        return self.layout.getNumColor()
+    def isUpperCase(self):
+        return self.layout.getUpperCase()
+    def changeUpperCase(self):
+        if self.layout.getUpperCase():
+            self.layout.setUpperCase(False)
+        else:
+            self.layout.setUpperCase(True)
     def writeSequence(self, txtctrl):
         #print self.genome.getSequence()[0:50]
-        if self.upperCase:
+        #print "UpperCase: " + str(self.layout.getUpperCase())
+        if self.layout.getUpperCase():
             sequence=self.genome.getSequence()[self.startRange:self.endRange].upper()
         else:
-            sequence=self.genome.getSequence()[self.startRange:self.endRange]
+            sequence=self.genome.getSequence()[self.startRange:self.endRange].lower()
         seqLen=len(sequence)
         numeration=self.startRange
         i=0

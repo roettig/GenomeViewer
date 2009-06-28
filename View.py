@@ -42,11 +42,11 @@ class MainFrame(wx.Frame):
         self.genomemodel = GenomeModel()#(self.genome, self.features)
         self.genomemodel.setGenome(self.genome)
         self.genomemodel.setFeatureListContainer(self.container)
-        
+
         ### splitter ###
         self.splitLeft = ProportionalSplitter(self, -1, 0.33)
         self.splitRight = ProportionalSplitter(self.splitLeft, -1, 0.9)
-        
+
 	    ### treeview ###
         self.treeview = TreeView(self.container, self.genomemodel, self.splitLeft)
         self.container.addObserver(self.treeview)
@@ -57,7 +57,7 @@ class MainFrame(wx.Frame):
 
 	    ### genomebar ###
         self.genomebar = GenomeBar(self.genomemodel, self.splitRight)
-        
+
         self.splitLeft.SplitVertically(self.treeview,self.splitRight)
         self.splitRight.SplitHorizontally(self.genomeview, self.genomebar)
 
@@ -107,29 +107,51 @@ class MainFrame(wx.Frame):
         # menu item
         openRegExSearch = searchMenu.Append(-1, "regular expression", "Search with regular expressions")
         self.Bind(wx.EVT_MENU, self.OnOpenRegExSearch, openRegExSearch)
-
         # menu item
         openGeneSearch = searchMenu.Append(-1, "Gene finding", "Search with sequence string")
         self.Bind(wx.EVT_MENU, self.OnOpenGeneSearch, openGeneSearch)
 
-
-
         #self.Bind(wx.EVT_MENU, self.onOpenFeatureSelection, openFeatureSelection)
-        #menu Properties
-        propertiesMenu = wx.Menu()
-        # menu item
-        setseqfont = propertiesMenu.Append(-1, "Sequence Font", "Set Sequence Font")
-        self.Bind(wx.EVT_MENU, self.OnSetSeqFont, setseqfont)
-        # menu item
-        setnumfont = propertiesMenu.Append(-1, "Numeration Font", "Set Numeration Font")
-        self.Bind(wx.EVT_MENU, self.OnSetNumFont, setnumfont)
+
+        #menu Format
+        formatMenu = wx.Menu()
+        reset= formatMenu.Append(-1, "Reset", "Reset Format")
+        self.Bind(wx.EVT_MENU, self.OnReset, reset)
+        formatMenu.AppendSeparator()
+        upperCase = formatMenu.AppendCheckItem(-1, "Capitals", "Upper Case")
+        self.Bind(wx.EVT_MENU, self.OnUpperCase, upperCase)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateUpperCase, upperCase)
+        bold = formatMenu.AppendCheckItem(-1, "Bold", "Bold")
+        self.Bind(wx.EVT_MENU, self.OnBold, bold)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateBold, bold)
+        italic = formatMenu.AppendCheckItem(-1, "Italic", "Italic")
+        self.Bind(wx.EVT_MENU, self.OnItalic, italic)
+        self.Bind(wx.EVT_UPDATE_UI, self.OnUpdateItalic, italic)
+        formatMenu.AppendSeparator()
+        increaseSize = formatMenu.Append(-1, "Increase Size", "Increases Font Size")
+        self.Bind(wx.EVT_MENU, self.OnIncreaseSize, increaseSize)
+        decreaseSize = formatMenu.Append(-1, "Decrease Size", "Decreases Font Size")
+        self.Bind(wx.EVT_MENU, self.OnDecreaseSize, decreaseSize)
+        formatMenu.AppendSeparator()
+        increaseLineSp = formatMenu.Append(-1, "Increase Line Spacing", "Increases Line Spacing")
+        self.Bind(wx.EVT_MENU, self.OnIncreaseLineSp, increaseLineSp)
+        decreaseLineSp = formatMenu.Append(-1, "Decrease Line Spacing", "Decreases Line Spacing")
+        self.Bind(wx.EVT_MENU, self.OnDecreaseLineSp, decreaseLineSp)
+        formatMenu.AppendSeparator()
+        indentMore = formatMenu.Append(-1, "Indent More", "Indents More")
+        self.Bind(wx.EVT_MENU, self.OnIndentMore, indentMore)
+        indentLess = formatMenu.Append(-1, "Indent Less", "Indents Less")
+        self.Bind(wx.EVT_MENU, self.OnIndentLess, indentLess)
+        formatMenu.AppendSeparator()
+        seqColor= formatMenu.Append(-1, "Sequence Color", "Change Color Of Sequence")
+        self.Bind(wx.EVT_MENU, self.OnSeqColor, seqColor)
+        numColor= formatMenu.Append(-1, "Numeration Color", "Change Color Of Numeration")
+        self.Bind(wx.EVT_MENU, self.OnNumColor, numColor)
 
         #menu Help
         helpMenu = wx.Menu()
-        # menu item
         about = helpMenu.Append(-1, "About", "About GenomeViewer")
         self.Bind(wx.EVT_MENU, self.OnAbout, about)
-
         #NCBI
         stuff = helpMenu.Append(-1, "Stuff", "Get more Stuff to View")
         self.Bind(wx.EVT_MENU, self.OnStuff, stuff)
@@ -140,28 +162,59 @@ class MainFrame(wx.Frame):
         menuBar.Append(editMenu, "Edit")
         menuBar.Append(searchMenu, "Search")
         #menuBar.Append(featureselectMenu, "Feature Selection")
-        menuBar.Append(propertiesMenu, "Properties")
+        menuBar.Append(formatMenu, "Format")
         menuBar.Append(helpMenu, "Help")
         self.SetMenuBar(menuBar)
 
+    def OnUpperCase(self, evt):
+        self.genomemodel.changeUpperCase()
+    def OnUpdateUpperCase(self, evt):
+        evt.Check(self.genomemodel.isUpperCase())
+    def OnReset(self, evt):
+        self.genomemodel.resetLayout()
+    def OnSeqColor(self, evt):
+        colourData = wx.ColourData()
+        colourData.SetColour(self.genomemodel.getSeqColor())
+        dlg = wx.ColourDialog(self, colourData)
+        if dlg.ShowModal() == wx.ID_OK:
+            colourData = dlg.GetColourData()
+            colour = colourData.GetColour()
+            self.genomemodel.setSeqColor(colour)
+        dlg.Destroy()
+    def OnNumColor(self, evt):
+        colourData = wx.ColourData()
+        colourData.SetColour(self.genomemodel.getNumColor())
+        dlg = wx.ColourDialog(self, colourData)
+        if dlg.ShowModal() == wx.ID_OK:
+            colourData = dlg.GetColourData()
+            colour = colourData.GetColour()
+            self.genomemodel.setNumColor(colour)
+        dlg.Destroy()
+    def OnIncreaseLineSp(self, evt):
+        self.genomemodel.increaseLineSp(10)
+    def OnDecreaseLineSp(self, evt):
+        self.genomemodel.decreaseLineSp(10)
+    def OnIndentMore(self, evt):
+        self.genomemodel.indentMore(20)
+    def OnIndentLess(self, evt):
+        self.genomemodel.indentLess(20)
+    def OnUpdateBold(self, evt):
+        evt.Check(self.genomemodel.isBold())
+    def OnUpdateItalic(self, evt):
+        evt.Check(self.genomemodel.isItalic())
+    def OnBold(self, evt):
+        self.genomemodel.changeSeqWeight()
+    def OnItalic(self, evt):
+        self.genomemodel.changeSeqStyle()
+    def OnIncreaseSize(self, evt):
+        self.genomemodel.incSeqSize(2)
+        self.genomemodel.incNumSize(2)
+    def OnDecreaseSize(self, evt):
+        self.genomemodel.decSeqSize(2)
+        self.genomemodel.decNumSize(2)
 
     def OnOpenCheckFrame(self, evt):
         check = CheckBoxFrame()
-
-
-    def OnSetSeqFont(self, evt):
-        dlg = wx.FontDialog(self, wx.FontData())
-        dlg.GetFontData().SetInitialFont(self.genomemodel.getSeqFont())
-        if dlg.ShowModal() == wx.ID_OK:
-            self.genomemodel.setSeqFont(dlg.GetFontData().GetChosenFont())
-        dlg.Destroy()
-
-    def OnSetNumFont(self, evt):
-        dlg = wx.FontDialog(self, wx.FontData())
-        dlg.GetFontData().SetInitialFont(self.genomemodel.getNumFont())
-        if dlg.ShowModal() == wx.ID_OK:
-            self.genomemodel.setNumFont(dlg.GetFontData().GetChosenFont())
-        dlg.Destroy()
 
     def OnAbout(self, event):
         info = wx.AboutDialogInfo()
