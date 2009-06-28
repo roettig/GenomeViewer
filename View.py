@@ -58,20 +58,10 @@ class MainFrame(wx.Frame):
 
 	    ### genomebar ###
         self.genomebar = GenomeBar(self.genomemodel, self.splitRight)
+        self.genomemodel.addObserver(self.genomebar)
 
         self.splitLeft.SplitVertically(self.treeview,self.splitRight)
         self.splitRight.SplitHorizontally(self.genomeview, self.genomebar)
-
-        ### sizer ###
-#        sizer = wx.GridBagSizer(15,20)
-#        sizer.Add(self.treeview, (0, 0), (15, 5), wx.EXPAND | wx.LEFT | wx.TOP | wx.BOTTOM , 5)
-#        sizer.Add(self.genomeview, (0, 5),(12, 15), wx.EXPAND | wx.RIGHT | wx.TOP , 5)
-#        sizer.Add(self.genomebar, (12, 5),(3, 15), wx.EXPAND | wx.RIGHT | wx.BOTTOM , 5)
-#
-#        sizer.AddGrowableCol(19)
-#        sizer.AddGrowableRow(10)
-#
-#        self.SetSizerAndFit(sizer)
 
         self.Centre()
         self.Show(True)
