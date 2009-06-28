@@ -91,6 +91,9 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnOpenGffAnnotation, openGffAnnotation)
 
         fileMenu.AppendSeparator()
+        #saveTxt = fileMenu.Append(-1, "Save Text", "Saves Sequences In Curren Format")
+        #self.Bind(wx.EVT_MENU, self.OnSaveTxt, saveTxt)
+        #fileMenu.AppendSeparator()
         # menu item "Exit"
         exit = fileMenu.Append(-1, "Exit", "Exit programm")
         self.Bind(wx.EVT_MENU, self.OnExit, exit)

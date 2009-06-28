@@ -71,7 +71,10 @@ class GenomeModel(Observable):
         self.layout.setNumSize(numsize+int)
     def decNumSize(self, int):
         numsize=self.layout.getNumSize()
-        self.layout.setNumSize(numsize-int)
+        if (numsize-int >=0):
+            self.layout.setNumSize(numsize-int)
+        else:
+            self.layout.setNumSize(0)
     def getSeqSize(self):
         return self.layout.getSeqSize();
     def incSeqSize(self, int):
@@ -79,7 +82,10 @@ class GenomeModel(Observable):
         self.layout.setSeqSize(seqsize+int)
     def decSeqSize(self, int):
         seqsize=self.layout.getSeqSize()
-        self.layout.setSeqSize(seqsize-int)
+        if (seqsize-int >=0):
+            self.layout.setSeqSize(seqsize-int)
+        else:
+            self.layout.setSeqSize(0)
     def isItalic(self):
         return self.layout.getSeqStyle() == wx.ITALIC
     def isBold(self):
@@ -99,13 +105,19 @@ class GenomeModel(Observable):
         self.layout.setLineSpacing(lp+int)
     def decreaseLineSp(self, int):
         lp=self.layout.getLineSpacing()
-        self.layout.setLineSpacing(lp-int)
+        if lp-int >= 0:
+            self.layout.setLineSpacing(lp-int)
+        else:
+            self.layout.setLineSpacing(0)
     def indentMore(self, int):
         indent=self.layout.getLeftIndent()
         self.layout.setLeftIndent(indent+int)
     def indentLess(self, int):
         indent=self.layout.getLeftIndent()
-        self.layout.setLeftIndent(indent-int)
+        if indent-int>=0:
+            self.layout.setLeftIndent(indent-int)
+        else:
+            self.layout.setLeftIndent(0)
     def setSeqColor(self, color):
         self.layout.setSeqColor(color)
     def getSeqColor(self):
