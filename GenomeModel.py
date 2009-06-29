@@ -8,6 +8,7 @@ import wx.richtext as rt
 from FeatureListContainer  import FeatureListContainer
 from Observable import Observable
 from random import randrange
+from Information import Information
 
 
 class GenomeModel(Observable):
@@ -197,6 +198,7 @@ class GenomeModel(Observable):
         #Farbgebung
         self.layout.addTypeColDict(type)
         rta.SetTextColour(self.layout.getTypeColDict(type))
+        description=description+";"+str(start)+";"+str(end)+";"+type
         rta.SetURL(description)
         txtctrl.Bind(wx.EVT_TEXT_URL, self.onUrl)
         #txtctrl.SetStyle((246, 306), rta)
@@ -253,8 +255,13 @@ class GenomeModel(Observable):
             i+=2
         #print str(newN+quot+numCount+1)
         return newN+quot+numCount+1
+
     def onUrl(self, evt):
-        wx.MessageBox(evt.GetString(), "Description")
+        info = Information(None, -1, evt.GetString(), 'Information')
+        info.ShowModal()
+        info.Destroy()
+        #wx.MessageBox(evt.GetString(), "Description")
+
     # rechnet Position im Genom in Position im Textfeld um und scrollt im Textfeld an richtige Stelle
     def showPos(self, txtctrl):
         if self.position>=self.startRange and self.position<=self.endRange:
