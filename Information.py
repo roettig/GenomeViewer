@@ -40,8 +40,8 @@ class Information(wx.Dialog):
         panel = wx.Panel(self, -1)
         vbox = wx.BoxSizer(wx.VERTICAL)
 
-        typefont = wx.Font(11, wx.DECORATIVE, wx.ITALIC, wx.BOLD, wx.NORMAL)
-        numberfont = wx.Font(9, wx.DECORATIVE, wx.ITALIC, wx.NORMAL)
+        typefont = wx.Font(12, wx.MODERN, wx.ITALIC, wx.NORMAL)
+        numberfont = wx.Font(9, wx.MODERN, wx.ITALIC, wx.NORMAL)
 
         type      = wx.StaticText(panel, -1, t, (5,10))
         start     = wx.StaticText(panel, -1, "START: \t"+s, (5,35))
