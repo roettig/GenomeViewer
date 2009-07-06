@@ -11,13 +11,16 @@ class Search(object):
         self.model = model
 
 
-    def regexsearch(self, regex):
+    def regexsearch(self, patterns):
         """search in a string with a re"""
         genome = Imports.genome
-        container = Imports.con
-        flist = []
-        flist.append(re.findall(regex, genome.getSequence() , re.I))
-        print flist
+        regex = re.compile( patterns , re.I)# kommen da wirklich Kleinbuchstaben vor?
+        matches = regex.search(genome.getSequence())
+        if matches is None:
+            wx.MessageBox("Suchstring ist nicht vorhanden!", style=wx.OK)
+        else:
+            print matches
+
 
 
     def genesearch(self, patterns):
