@@ -20,6 +20,7 @@ from ProportionalSplitter import ProportionalSplitter
 from sys import platform
 from CheckBoxFrame import CheckBoxFrame
 import wx.richtext as rt
+from TypeColors import TypeColors
 
 class MainFrame(wx.Frame):
 
@@ -48,7 +49,7 @@ class MainFrame(wx.Frame):
         self.splitLeft = ProportionalSplitter(self, -1, 0.33)
         self.splitRight = ProportionalSplitter(self.splitLeft, -1, 0.9)
 
-	    ### treeview ###
+        ### treeview ###
         self.treeview = TreeView(self.container, self.genomemodel, self.splitLeft)
         self.container.addObserver(self.treeview)
 
@@ -56,7 +57,7 @@ class MainFrame(wx.Frame):
         self.genomeview = GenomeView(self.genomemodel, self.splitRight)
         self.genome.addObserver(self.genomeview)
 
-	    ### genomebar ###
+        ### genomebar ###
         self.genomebar = GenomeBar(self.genomemodel, self.splitRight)
         self.genomemodel.addObserver(self.genomebar)
 
@@ -97,6 +98,8 @@ class MainFrame(wx.Frame):
         editMenu = wx.Menu()
         edit = editMenu.Append(-1, "Edit", "Edit Feature Selection")
         self.Bind(wx.EVT_MENU, self.OnOpenCheckFrame, edit)
+        changeTypeCol = editMenu.Append(-1, "Change Type Colors", "Change Type Colors")
+        self.Bind(wx.EVT_MENU, self.OnOpenTypeColors, changeTypeCol)
 
 
 
@@ -234,6 +237,9 @@ class MainFrame(wx.Frame):
 
     def OnOpenCheckFrame(self, evt):
         check = CheckBoxFrame()
+
+    def OnOpenTypeColors(self, evt):
+        TypeColors(self.genomemodel.getTypeDict())
 
     def OnAbout(self, event):
         info = wx.AboutDialogInfo()

@@ -3,6 +3,7 @@
 
 import wx
 import wx.richtext as rt
+import random
 from Observable import Observable
 
 class Layout(Observable):
@@ -16,14 +17,18 @@ class Layout(Observable):
     typeColDict={}
     leftIndent=0
     lineSpacing=0
+    seqStyle=wx.NORMAL
+    seqWeight=wx.BOLD
     upperCase = True
     def __init__(self, initial_seqSize=10, initial_numSize=8, initial_seqColor=wx.Color(0,0,0), initial_numColor=wx.Color(0,0,0), initial_leftIndent=50, initial_lineSpacing=20):
         self.seqSize=initial_seqSize
         self.numSize=initial_numSize
         self.seqColor=initial_seqColor
         self.numColor=initial_numColor
-        self.colorList=initial_colorList=['#00FF00', '#0000FF', '#FF0000', '#008000', '#808080' '#FF00FF', '#00FFFF', '#800000', '#808000', '#000080', '#800080', '#008080', '#C0C0C0', '#A52A2A', '#7FFF00']
+        self.colorList=initial_colorList=[]
+        #'#0000FF', '#FF0000', '#008000', '#808080', '#000080', '#800000', '#00FF00', '#FF00FF', '#800080', '#808000', '#00FFFF', '#7FFF00', '#8B008B', '#E9967A'
         self.colListIter=iter(self.colorList)
+        self.typeColDict={}
         self.leftIndent=initial_leftIndent
         self.lineSpacing=initial_lineSpacing
         self.seqStyle=wx.NORMAL
@@ -109,7 +114,18 @@ class Layout(Observable):
     # weist einem Typ eine Farbe zu, falls dieser noch nicht im Dictionary vorhanden
     def addTypeColDict(self, type):
         if not self.typeColDict.has_key(type):
-            self.typeColDict[type]=self.colListIter.next()
-            print self.typeColDict
+            try:
+                self.typeColDict[type]=self.colListIter.next()
+                #print self.typeColDict
+            except StopIteration:
+                r=random.randint(0, 255)
+                g=random.randint(0, 255)
+                b=random.randint(0, 255)
+                #print r, g, b
+                newcolor=wx.Color(r,g,b)
+                self.typeColDict[type]=newcolor
+                #print self.typeColDict
     def getTypeColDict(self, key):
         return self.typeColDict.get(key)
+    def getTypeDict(self):
+        return self.typeColDict

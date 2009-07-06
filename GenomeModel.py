@@ -65,6 +65,8 @@ class GenomeModel(Observable):
         new = Layout()
         self.layout = Layout()
         self.setChanged()
+    def getTypeDict(self):
+        return self.layout.getTypeDict()
     def getNumSize(self):
         return self.layout.getNumSize()
     def incNumSize(self, int):
