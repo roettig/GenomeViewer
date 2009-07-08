@@ -53,21 +53,27 @@ class Ptt(object):
     def importptt(self, myfile):
         """imports a ptt file and creates and internal object"""
         f = file(myfile, 'r')
-        self.name = f.readline()
-        self.proteins = f.readline()
-        pttlist = FeatureList("ptt")
-        genomedataTemp = f.readlines()
-        genomedataTemp = genomedataTemp[1:]
-        for eachline in genomedataTemp:
-            eachline = eachline.strip()
-            tmpl = eachline.split('\t')
-            l = tmpl[0].split("..")
-            tmpl = tmpl[1:]
-            tmpl = l+tmpl
-            feature = Feature(tmpl[9],tmpl[9],int(tmpl[0]), int(tmpl[1]))
-            pttlist.addFeature(feature)
-        f.close()
-        con.addPTTList(pttlist)
+        if myfile.endswith('.ptt'):
+            self.name = f.readline()
+            self.proteins = f.readline()
+            pttlist = FeatureList("ptt")
+            genomedataTemp = f.readlines()
+            genomedataTemp = genomedataTemp[1:]
+            for eachline in genomedataTemp:
+                eachline = eachline.strip()
+                tmpl = eachline.split('\t')
+                l = tmpl[0].split("..")
+                tmpl = tmpl[1:]
+                tmpl = l+tmpl
+                feature = Feature(tmpl[9],tmpl[9],int(tmpl[0]), int(tmpl[1]))
+                pttlist.addFeature(feature)
+            f.close()
+            con.addPTTList(pttlist)
+        else:
+            wx.MessageBox("No PTT-File given, pleasy try again","fatal import error", style=wx.OK)
+            f.close()
+
+
 
     def exportptt(self,Ptt):
         """Exports ptt obejcts in a ptt file"""
@@ -80,11 +86,6 @@ class Ptt(object):
         example.write(self.proteins)
         example.writelines(self.genomedata)
         example.close()
-
-
-#MyString = KOMMT_VON_IRGENDWO_UND_ENTHÄLT_VIELLEICHT_ZWEI_Äs
-#f=open('/tmp/workfile', 'w' )
-#f.write(MyString.encode("utf-8"))
 
 class Gff(object):
     """Import, export and parse of files in gff format"""
@@ -102,19 +103,23 @@ class Gff(object):
     def importgff(self, myfile):
         """imports a gff file and creats an internal object"""
         f = file(myfile, 'r')
+        if myfile.endswith('.gff'):
+            gfflist = FeatureList("gff")
+            genomedataTemp = f.readlines()
+            genomedataTemp = genomedataTemp[5:]
+            genomedataTemp = genomedataTemp[:len(genomedataTemp) -1]
+            # Split lines of file
+            for eachline in genomedataTemp:
+                eachline = eachline.strip()
+                tmpl = eachline.split('\t')
+                feature = Feature(tmpl[2], tmpl[8], int(tmpl[3]), int(tmpl[4]))
+                gfflist.addFeature(feature)
+            f.close()
+            con.addGFFList(gfflist)
+        else:
+            wx.MessageBox("No GFF-File given, pleasy try again","fatal import error", style=wx.OK)
+            f.close()
 
-        gfflist = FeatureList("gff")
-        genomedataTemp = f.readlines()
-        genomedataTemp = genomedataTemp[5:]
-        genomedataTemp = genomedataTemp[:len(genomedataTemp) -1]
-        # Split lines of file
-        for eachline in genomedataTemp:
-            eachline = eachline.strip()
-            tmpl = eachline.split('\t')
-            feature = Feature(tmpl[2], tmpl[8], int(tmpl[3]), int(tmpl[4]))
-            gfflist.addFeature(feature)
-        f.close()
-        con.addGFFList(gfflist)
 
     def exportgff(self, Gff):
         """Exports gff obejcts in a gff file"""

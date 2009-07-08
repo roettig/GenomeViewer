@@ -14,12 +14,16 @@ class Search(object):
     def regexsearch(self, patterns):
         """search in a string with a re"""
         genome = Imports.genome
-        regex = re.compile( patterns , re.I)# kommen da wirklich Kleinbuchstaben vor?
+        regex = re.compile(patterns , re.I)
         matches = regex.search(genome.getSequence())
+        regexlist = FeatureList("regex")
         if matches is None:
             wx.MessageBox("Suchstring ist nicht vorhanden!", style=wx.OK)
         else:
-            print matches
+            for match in matches:
+                feature = Feature("Reg-Ex Hit","Gene Sequence", match.start(),match.end() )
+                regexlist.addFeature(feature)
+            Imports.con.addFeatureList(regexlist)
 
 
 

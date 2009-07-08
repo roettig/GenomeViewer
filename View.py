@@ -96,7 +96,7 @@ class MainFrame(wx.Frame):
 
         #menu "Edit
         editMenu = wx.Menu()
-        edit = editMenu.Append(-1, "Edit", "Edit Feature Selection")
+        edit = editMenu.Append(-1, "Feature Selection", "Edit Feature Selection")
         self.Bind(wx.EVT_MENU, self.OnOpenCheckFrame, edit)
         changeTypeCol = editMenu.Append(-1, "Change Type Colors", "Change Type Colors")
         self.Bind(wx.EVT_MENU, self.OnOpenTypeColors, changeTypeCol)
