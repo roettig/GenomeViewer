@@ -23,11 +23,13 @@ import wx.richtext as rt
 from TypeColors import TypeColors
 
 class MainFrame(wx.Frame):
+    """ main window of GenomeViewer """
 
     hsize = 800
     vsize = 600
 
     def __init__ (self):
+        """ initializing GenomeViewer """
 
         wx.Frame.__init__(self, None, -1, "Genome Viewer", size=(self.hsize, self.vsize))
 
@@ -64,7 +66,7 @@ class MainFrame(wx.Frame):
 
 
     def MakeMenuBar(self):
-        ''' creating the menu '''
+        """ creating the menu """
         #menu "File
         fileMenu = wx.Menu()
         # menu item "Open Genome"
@@ -164,11 +166,13 @@ class MainFrame(wx.Frame):
 
 
     def OnSaveTxt(self, evt):
+        """ saves actual GenomeView content to file """
         if not self.genomeview.getRtc().GetFilename():
             self.OnSaveTxtAs(evt)
             return
         self.genomeview.getRtc().SaveFile()
     def OnSaveTxtAs(self, evt):
+        """ saves actual GenomeView content to file (user sets filename and directory) """
         wildcard, types = rt.RichTextBuffer.GetExtWildcard(save=True)
 
         dlg = wx.FileDialog(self, "Choose a filename",
@@ -184,12 +188,15 @@ class MainFrame(wx.Frame):
                 self.genomeview.getRtc().SaveFile(path, fileType)
         dlg.Destroy()
     def OnUpperCase(self, evt):
+        """ sets GenomeView content to upper case """
         self.genomemodel.changeUpperCase()
     def OnUpdateUpperCase(self, evt):
         evt.Check(self.genomemodel.isUpperCase())
     def OnReset(self, evt):
+        """ resets GenomeView layout to defaults"""
         self.genomemodel.resetLayout()
     def OnSeqColor(self, evt):
+        """ sets color of sequence in GenomeView """
         colourData = wx.ColourData()
         colourData.SetColour(self.genomemodel.getSeqColor())
         dlg = wx.ColourDialog(self, colourData)
@@ -199,6 +206,7 @@ class MainFrame(wx.Frame):
             self.genomemodel.setSeqColor(colour)
         dlg.Destroy()
     def OnNumColor(self, evt):
+        """ sets color of numeration in GenomeView """
         colourData = wx.ColourData()
         colourData.SetColour(self.genomemodel.getNumColor())
         dlg = wx.ColourDialog(self, colourData)
@@ -208,35 +216,46 @@ class MainFrame(wx.Frame):
             self.genomemodel.setNumColor(colour)
         dlg.Destroy()
     def OnIncreaseLineSp(self, evt):
+        """ increases line spacing of GenomeView"""
         self.genomemodel.increaseLineSp(10)
     def OnDecreaseLineSp(self, evt):
+        """ decreases line spacing of GenomeView """
         self.genomemodel.decreaseLineSp(10)
     def OnIndentMore(self, evt):
+        """ intends sequence at GenomeView more """
         self.genomemodel.indentMore(20)
     def OnIndentLess(self, evt):
+        """ intends sequence at GenomeView less """
         self.genomemodel.indentLess(20)
     def OnUpdateBold(self, evt):
         evt.Check(self.genomemodel.isBold())
     def OnUpdateItalic(self, evt):
         evt.Check(self.genomemodel.isItalic())
     def OnBold(self, evt):
+        """ changes text at GenomeView to bold """
         self.genomemodel.changeSeqWeight()
     def OnItalic(self, evt):
+        """ changes text at GenomeView to italic """
         self.genomemodel.changeSeqStyle()
     def OnIncreaseSize(self, evt):
+        """ increases text size of GenomeView """
         self.genomemodel.incSeqSize(2)
         self.genomemodel.incNumSize(2)
     def OnDecreaseSize(self, evt):
+        """ decreases text size of GenomeView"""
         self.genomemodel.decSeqSize(2)
         self.genomemodel.decNumSize(2)
 
     def OnOpenCheckFrame(self, evt):
+        """ opens CheckFrame-window """
         check = CheckBoxFrame()
 
     def OnOpenTypeColors(self, evt):
+        """ opens TypeColors-window """
         TypeColors(self.genomemodel.getTypeDict())
 
     def OnAbout(self, event):
+        """ opens about-window """
         info = wx.AboutDialogInfo()
         info.Name = "GenomeViewer"
         info.Version = "1.0"
@@ -254,9 +273,11 @@ class MainFrame(wx.Frame):
         wx.AboutBox(info)
 
     def OnExit(self, event):
+        """ exits program """
         self.Close(True)
 
     def OnOpenGenomeFile(self, event):
+        """ starts dialog for loading genomedata """
         if platform == "win32":
             wildcard = ""
         else:
@@ -270,6 +291,7 @@ class MainFrame(wx.Frame):
 
 
     def OnOpenGffAnnotation(self, event):
+        """ starts dialog for loading gff-annotationdata"""
         if platform == "win32":
             wildcard = ""
         else:
@@ -283,6 +305,7 @@ class MainFrame(wx.Frame):
 
 
     def OnOpenPttAnnotation(self, event):
+        """ starts dialog for loading ptt-annotationdata """
         if platform == "win32":
             wildcard = ""
         else:
@@ -296,6 +319,7 @@ class MainFrame(wx.Frame):
 
 
     def OnOpenRegExSearch(self,event):
+        """ opens regular expression search window """
         dialog = wx.TextEntryDialog(None, "Please enter regular expression here:",
                                     "Regular Expression Search","",
                                     style=wx.OK|wx.CANCEL)
@@ -305,6 +329,7 @@ class MainFrame(wx.Frame):
             search.regexsearch(dialog.GetValue())
 
     def OnOpenGeneSearch(self,event):
+        """ opens sequence search window """
         dialog = wx.TextEntryDialog(None, "Please enter sequence string here:",
                                     "Gene finding","",
                                     style=wx.OK|wx.CANCEL)
@@ -314,6 +339,7 @@ class MainFrame(wx.Frame):
             search.genesearch(dialog.GetValue())
 
     def OnStuff(self,event):
+        """ opens special stuff window """
         info = wx.AboutDialogInfo()
         info.Name = "NCBI"
         info.Description = wordwrap(

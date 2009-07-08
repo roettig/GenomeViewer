@@ -6,13 +6,12 @@ from GenomeModel import GenomeModel
 class Search(object):
     """contains search moduls"""
 
-
     def __init__(self,model):
         self.model = model
 
 
     def regexsearch(self, patterns):
-        """search in a string with a re"""
+        """ search in genome by regular-expression-search """
         genome = Imports.genome
         regex = re.compile(patterns , re.I)
         matches = regex.search(genome.getSequence())
