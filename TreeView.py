@@ -22,6 +22,7 @@ class TreeView(wx.Panel, IObserver):
 		self.searchResults = self.tree.AppendItem(self.root, "Search Results")
 		self.ptt = self.tree.AppendItem(self.root, "PTT-Imports")
 		self.gff = self.tree.AppendItem(self.root, "GFF-Imports")
+		self.tree.Expand(self.root)
 
 		hbox = wx.BoxSizer(wx.HORIZONTAL)
 		hbox.Add(self.tree, 1, flag= wx.GROW | wx.EXPAND)
