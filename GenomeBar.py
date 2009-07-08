@@ -77,7 +77,7 @@ class GenomeBar(wx.Panel, IObserver):
         #self.barImg = self.barImg.Scale(self.width, self.height)
         #self.barBmp = self.barImg.ConvertToBitmap()
         #barBrush = wx.BrushFromBitmap(self.barBmp)
-        dc.SetPen(wx.Pen('white', 1, wx.TRANSPARENT))
+        #dc.SetPen(wx.Pen('white', 1, wx.TRANSPARENT))
         #dc.SetBrush(barBrush)
         dc.DrawRectangle(0, 0, self.width-3.5, self.height-3.5)
 
