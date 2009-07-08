@@ -30,11 +30,6 @@ class MainFrame(wx.Frame):
     def __init__ (self):
 
         wx.Frame.__init__(self, None, -1, "Genome Viewer", size=(self.hsize, self.vsize))
-        #self.panel = wx.Panel(self, -1)
-        #self.panel.SetSize(size=(self.hsize, self.vsize))
-
-        # macht, dass nummerierung noch nicht losgeht, bevor genom geladen ist
-        # loaded = False
 
         self.CreateStatusBar()
         self.MakeMenuBar()
@@ -106,10 +101,10 @@ class MainFrame(wx.Frame):
         #menu SearchMenu
         searchMenu = wx.Menu()
         # menu item
-        openRegExSearch = searchMenu.Append(-1, "regular expression", "Search with regular expressions")
+        openRegExSearch = searchMenu.Append(-1, "Regular Expression", "Search with regular expressions")
         self.Bind(wx.EVT_MENU, self.OnOpenRegExSearch, openRegExSearch)
         # menu item
-        openGeneSearch = searchMenu.Append(-1, "Gene finding", "Search with sequence string")
+        openGeneSearch = searchMenu.Append(-1, "Gene Finding", "Search with sequence string")
         self.Bind(wx.EVT_MENU, self.OnOpenGeneSearch, openGeneSearch)
 
         #self.Bind(wx.EVT_MENU, self.onOpenFeatureSelection, openFeatureSelection)
@@ -273,7 +268,6 @@ class MainFrame(wx.Frame):
             fasta.importfasta(dialog.GetPath())
             dialog.Destroy()
 
-        # self.loaded = True
 
     def OnOpenGffAnnotation(self, event):
         if platform == "win32":
@@ -286,7 +280,7 @@ class MainFrame(wx.Frame):
             gff = Imports.Gff()
             gff.importgff(dialog.GetPath())
             dialog.Destroy()
-            #print Imports.con.getGFFContainer()[2].getEnd()
+
 
     def OnOpenPttAnnotation(self, event):
         if platform == "win32":
@@ -299,7 +293,7 @@ class MainFrame(wx.Frame):
             ptt = Imports.Ptt()
             ptt.importptt(dialog.GetPath())
             dialog.Destroy()
-            #print Imports.con.getPTTContainer()[2].getEnd()
+
 
     def OnOpenRegExSearch(self,event):
         dialog = wx.TextEntryDialog(None, "Please enter regular expression here:",
@@ -327,7 +321,6 @@ class MainFrame(wx.Frame):
             350, wx.ClientDC(self))
         info.WebSite = ("http://www.ncbi.nlm.nih.gov/", "Homepage of NCBI")
         wx.AboutBox(info)
-
 
 
 if __name__ == "__main__":

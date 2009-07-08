@@ -10,7 +10,6 @@ class ProportionalSplitter(wx.SplitterWindow):
         self.ResetSash()
         self.Bind(wx.EVT_SIZE, self.OnReSize)
         self.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.OnSashChanged, id=id)
-        ##hack to set sizes on first paint event
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.firstpaint = True
 
@@ -26,27 +25,25 @@ class ProportionalSplitter(wx.SplitterWindow):
 
     def GetExpectedSashPosition(self):
         if self.GetSplitMode() == wx.SPLIT_HORIZONTAL:
-            tot = max(self.GetMinimumPaneSize(),self.GetParent().GetClientSize().height)
+            total = max(self.GetMinimumPaneSize(),self.GetParent().GetClientSize().height)
         else:
-            tot = max(self.GetMinimumPaneSize(),self.GetParent().GetClientSize().width)
-        return int(round(tot * self.proportion))
+            total = max(self.GetMinimumPaneSize(),self.GetParent().GetClientSize().width)
+        return int(round(total * self.proportion))
 
     def ResetSash(self):
         self.SetSashPosition(self.GetExpectedSashPosition())
 
     def OnReSize(self, event):
-        "Window has been resized, so we need to adjust the sash based on self.proportion."
         self.ResetSash()
         event.Skip()
 
     def OnSashChanged(self, event):
-        "We'll change self.proportion now based on where user dragged the sash."
         pos = float(self.GetSashPosition())
         if self.GetSplitMode() == wx.SPLIT_HORIZONTAL:
-            tot = max(self.GetMinimumPaneSize(),self.GetParent().GetClientSize().height)
+            total = max(self.GetMinimumPaneSize(),self.GetParent().GetClientSize().height)
         else:
-            tot = max(self.GetMinimumPaneSize(),self.GetParent().GetClientSize().width)
-        self.proportion = pos / tot
+            total = max(self.GetMinimumPaneSize(),self.GetParent().GetClientSize().width)
+        self.proportion = pos / total
         event.Skip()
 
     def OnPaint(self,event):

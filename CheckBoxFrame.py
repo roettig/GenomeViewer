@@ -15,6 +15,7 @@ class CheckBoxFrame(wx.Frame):
         checkbox2.Show()
         checkbox3.Show()
         btn1.Show()
+        self.Centre()
         self.Show()
 
     def CheckCheckboxes(self):

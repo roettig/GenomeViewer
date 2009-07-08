@@ -24,7 +24,7 @@ class Fasta(object):
         firstchar = currline[0]
         #is file a fasta file
         if firstchar != ">":
-            wx.MessageBox("No FastA-File given, pleasy try again","fatal import error", style=wx.OK)
+            wx.MessageBox("No FastA-File given, pleasy try again","Fatal Import Error", style=wx.OK)
             myfasta.close()
         else:
             self.head = currline
@@ -70,7 +70,7 @@ class Ptt(object):
             f.close()
             con.addPTTList(pttlist)
         else:
-            wx.MessageBox("No PTT-File given, pleasy try again","fatal import error", style=wx.OK)
+            wx.MessageBox("No PTT-File given, pleasy try again","Fatal Import Error", style=wx.OK)
             f.close()
 
 
@@ -117,7 +117,7 @@ class Gff(object):
             f.close()
             con.addGFFList(gfflist)
         else:
-            wx.MessageBox("No GFF-File given, pleasy try again","fatal import error", style=wx.OK)
+            wx.MessageBox("No GFF-File given, pleasy try again","Fatal Import Error", style=wx.OK)
             f.close()
 
 

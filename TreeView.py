@@ -14,9 +14,6 @@ class TreeView(wx.Panel, IObserver):
 	def __init__(self, observed, model, *args, **kwargs):
 		
 		wx.Panel.__init__(self, style=wx.BORDER_SUNKEN, *args, **kwargs)    
-	#def __init__(self, parent, id, observed, model):
-
-		#wx.Panel.__init__(self, parent, id, style=wx.BORDER_SUNKEN, size=(400, 300))
 
 		self.model = model
 		self.tree = wx.TreeCtrl(self, -1)
@@ -97,5 +94,5 @@ class TreeView(wx.Panel, IObserver):
 		self.gff = self.tree.AppendItem(self.root, "GFF-Imports")
 		self.AddTreeNodes(self.gff, Imports.con.getGFFList())
 		self.AddTreeNodes(self.ptt, Imports.con.getPTTList())
-
+		self.tree.Expand(self.root)
 

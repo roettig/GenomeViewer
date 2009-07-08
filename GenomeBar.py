@@ -11,17 +11,31 @@ class GenomeBar(wx.Panel, IObserver):
     def __init__(self, model, *args, **kwargs):
         wx.Panel.__init__(self, style=wx.BORDER_SUNKEN, *args, **kwargs)
 
-        #self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
+        self.width, self.height = self.GetSize()
+        
+        #background image
+        self.barImg = wx.Image("genomebar.jpg", type=wx.BITMAP_TYPE_ANY, index=-1)
+        #self.barImg.Scale(self.width, self.height)
+        self.barBmp = self.barImg.ConvertToBitmap()
 
+        #pointer image
+        self.pointerImg = wx.Image("genomepointer.png", type=wx.BITMAP_TYPE_ANY, index=-1)
+        self.pointerBmp = self.pointerImg.ConvertToBitmap()
+        
+        #cross-hair cursor
+        self.cursor = wx.StockCursor(wx.CURSOR_CROSS)
+        self.SetCursor(self. cursor)
+        
         self.model = model
         self.Centre()
         self.Show(True)
         self.drawBar()
 
 
-    #def OnPaint(self, event):
-        #self.drawBar()
+    def OnPaint(self, event):
+        self.drawBar()
 
 
     def OnLeftDown(self, event):
@@ -57,14 +71,20 @@ class GenomeBar(wx.Panel, IObserver):
 
     def drawBar(self):
         dc = wx.ClientDC(self)
-        width, heigth = self.GetSize()
-        dc.SetBrush(wx.Brush('#ffffff'))
-        dc.SetPen(wx.Pen('#ffffff'))
-        dc.DrawRectangle(0, 0, width, heigth)
+        self.width, self.height = self.GetSize()  
+        
+        #draw background
+        #self.barImg = self.barImg.Scale(self.width, self.height)
+        #self.barBmp = self.barImg.ConvertToBitmap()
+        #barBrush = wx.BrushFromBitmap(self.barBmp)
+        dc.SetPen(wx.Pen('white', 1, wx.TRANSPARENT))
+        #dc.SetBrush(barBrush)
+        dc.DrawRectangle(0, 0, self.width-3.5, self.height-3.5)
 
-        dc.SetPen(wx.Pen('#000000'))
+        #draw pointer
         pos = self.genomePosToMousePos(self.model.getPosition())
-        dc.DrawLine(pos, 0, pos, heigth)
+        pos = pos - self.pointerImg.GetWidth()/2 +1
+        dc.DrawBitmap(self.pointerBmp, pos, 0)
 
 
     def update(self, source, object):
