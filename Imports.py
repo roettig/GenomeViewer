@@ -53,7 +53,7 @@ class Ptt(object):
     def importptt(self, myfile):
         """imports a ptt file and creates and internal object"""
         f = file(myfile, 'r')
-        if f.name.endswith('.ptt'):
+        if myfile.endswith('.ptt'):
             self.name = f.readline()
             self.proteins = f.readline()
             pttlist = FeatureList("ptt")
@@ -103,7 +103,7 @@ class Gff(object):
     def importgff(self, myfile):
         """imports a gff file and creats an internal object"""
         f = file(myfile, 'r')
-        if f.name.endswith('.gff'):
+        if myfile.endswith('.gff'):
             gfflist = FeatureList("gff")
             genomedataTemp = f.readlines()
             genomedataTemp = genomedataTemp[5:]

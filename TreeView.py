@@ -10,10 +10,9 @@ from GenomeModel import GenomeModel
 
 
 class TreeView(wx.Panel, IObserver):
-	""" displays search results and annotations in a treeview-widget """
 	
 	def __init__(self, observed, model, *args, **kwargs):
-		""" initializes TreeView """
+		
 		wx.Panel.__init__(self, style=wx.BORDER_SUNKEN, *args, **kwargs)    
 
 		self.model = model
@@ -22,11 +21,19 @@ class TreeView(wx.Panel, IObserver):
 		self.searchResults = self.tree.AppendItem(self.root, "Search Results")
 		self.ptt = self.tree.AppendItem(self.root, "PTT-Imports")
 		self.gff = self.tree.AppendItem(self.root, "GFF-Imports")
-		self.tree.Expand(self.root)
 
 		hbox = wx.BoxSizer(wx.HORIZONTAL)
 		hbox.Add(self.tree, 1, flag= wx.GROW | wx.EXPAND)
 
+		self.Bind(wx.EVT_TREE_ITEM_EXPANDED,
+			self.OnItemExpanded,
+			self.tree)
+		self.Bind(wx.EVT_TREE_ITEM_COLLAPSED,
+			self.OnItemCollapsed,
+			self.tree)
+		self.Bind(wx.EVT_TREE_SEL_CHANGED,
+			self.OnSelChanged,
+			self.tree)
 		self.Bind(wx.EVT_TREE_ITEM_ACTIVATED,
 			self.OnActivated,
 			self.tree)
@@ -35,20 +42,17 @@ class TreeView(wx.Panel, IObserver):
 		self.Show(True)
 
 	def AddTreeNodes(self, parentItem, items):
-		""" adds nodes to TreeView (given as item-list) """
 		for item in items:
 		    iid = self.tree.AppendItem(parentItem, item.getType())
 		    self.tree.SetPyData(iid,item)
 
 
 	def GetItemText(self, item):
-		""" returns text of an item """
 		if item:
 			return self.tree.GetItemText(item)
 		else:
 			return ""
 	def OnTreeRightClick(self, evt):
-		""" activates/inactivates right-clicked annotation """
 		item = evt.GetItem()
 		feature = self.tree.GetItemPyData(item)
 		if feature.getActive() == True:
@@ -57,8 +61,17 @@ class TreeView(wx.Panel, IObserver):
 			feature.setActive(True)
 		Imports.con.setChanged()
 
+
+	def OnItemExpanded(self, evt):
+		pass
+
+	def OnItemCollapsed(self, evt):
+		pass
+
+	def OnSelChanged(self, evt):
+		pass
+
 	def OnActivated(self, evt):
-		""" jumps to marked annotation in GenomeView """
 		genome = Imports.genome
 		item = evt.GetItem()
 		feature = self.tree.GetItemPyData(item)
@@ -74,7 +87,6 @@ class TreeView(wx.Panel, IObserver):
 
 
 	def update(self, source, object):
-		""" observer update method """
 		self.tree.DeleteAllItems()
 		self.root = self.tree.AddRoot("Features")
 		self.searchResults = self.tree.AppendItem(self.root, "Search Results")

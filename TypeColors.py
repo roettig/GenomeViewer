@@ -1,6 +1,7 @@
 import wx
 import  wx.lib.scrolledpanel as scrolled
 import  wx.lib.colourselect as  csel
+from cButton import cButton
 
 class TypeColors(wx.Frame):
     dictionary={}
@@ -20,24 +21,21 @@ class TypeColors(wx.Frame):
                 label=wx.StaticText(self, -1, type)
                 color=self.dictionary.get(type)
                 #print color
-                cButton = csel.ColourSelect(self, -1, "", color, size=(60, 20))
-                # die Methode OnSelectColour muss wissen, zu welchem Typ die neue Farbe gehoert,
-                # kann man OnSelectColor vielleicht noch nen Parameter (Type) mitgeben?
-                # wenn ja, wie mach ich das?
-                cButton.Bind(csel.EVT_COLOURSELECT, self.OnSelectColour)
+                button = cButton(type, color)
+                button.Bind(csel.EVT_COLOURSELECT, self.OnSelectColour)
 
                 sizer.AddMany([(label), (cButton)])
         else:
             label=wx.StaticText(self, -1, 'No Annotations loaded')
             sizer.Add(label)
-            
-            
+
+
         vsizer = wx.BoxSizer(wx.VERTICAL)
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
 
         vsizer.Add(sizer, 1, wx.GROW|wx.EXPAND|wx.ALL, 5)
         hsizer.Add(vsizer, 1, wx.GROW|wx.EXPAND)
-        
+
         self.SetSizerAndFit(hsizer)
         self.SetAutoLayout(1)
         self.Centre()
@@ -48,8 +46,11 @@ class TypeColors(wx.Frame):
 
     def OnSelectColour(self, evt):
         newcolor=evt.GetValue()
-        print newcolor
-        print type
+        obj=evt.GetEventObject()
+        type=obj.getType()
+        self.dictionary[type]=newcolor
+        print self.dictionary
+        print obj.GetType()
 
 if __name__ == "__main__":
     app = wx.PySimpleApp()

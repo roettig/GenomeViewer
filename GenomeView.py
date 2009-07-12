@@ -37,6 +37,11 @@ class GenomeView(wx.Panel, IObserver):
         #geht zur angegebenen Position
         self.model.showPos(self.sequenceCtrl)
         #self.model.showFeature(999, 1352, self.sequenceCtrl)
+        print "GetClientSize(): ", self.sequenceCtrl.GetClientSize()
+        print "GetSize(): ", self.sequenceCtrl.GetSize()
+        print "GetCharWidth(): ", self.sequenceCtrl.GetCharWidth()
+        print "GetCharHeight(): ", self.sequenceCtrl.GetCharHeight()
+        print "ConvertDialogSizeToPixels(): ", self.sequenceCtrl.ConvertDialogSizeToPixels((1,1))
 
     def getRtc(self):
         return self.sequenceCtrl
