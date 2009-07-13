@@ -37,7 +37,8 @@ class GenomeBar(wx.Panel, IObserver):
 
     def OnPaint(self, event):
         """ redraws GenomeBar """
-        self.drawBar()
+        #self.drawBar()
+        pass
 
 
     def OnLeftDown(self, event):
