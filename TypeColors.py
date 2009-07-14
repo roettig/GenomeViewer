@@ -2,8 +2,9 @@ import wx
 import  wx.lib.scrolledpanel as scrolled
 import  wx.lib.colourselect as  csel
 from cButton import cButton
+from Observable import Observable
 
-class TypeColors(wx.Frame):
+class TypeColors(wx.Frame, Observable):
     dictionary={}
     def __init__(self, dictionary):
         self.dictionary=dictionary
@@ -21,14 +22,25 @@ class TypeColors(wx.Frame):
                 label=wx.StaticText(self, -1, type)
                 color=self.dictionary.get(type)
                 #print color
-                button = cButton(type, color)
+                button = cButton(self, color, type)
                 button.Bind(csel.EVT_COLOURSELECT, self.OnSelectColour)
 
-                sizer.AddMany([(label), (cButton)])
+                sizer.AddMany([(label), (button)])
         else:
             label=wx.StaticText(self, -1, 'No Annotations loaded')
             sizer.Add(label)
 
+        #Buttons
+        okButton=wx.Button(self, -1, "OK")
+        self.Bind(wx.EVT_BUTTON, self.OnOkButton, id=okButton.GetId())
+        cancelButton=wx.Button(self, -1, "Cancel")
+        self.Bind(wx.EVT_BUTTON, self.OnCancelButton, id=cancelButton.GetId())
+        #applyButton=wx.Button(self, -1, "Apply")
+        #self.Bind(wx.EVT_BUTTON, self.OnApplyButton, id=applyButton.GetId())
+
+        sizer.Add(okButton)
+        sizer.Add(cancelButton)
+        #sizer.Add(applyButton)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -41,16 +53,24 @@ class TypeColors(wx.Frame):
         self.Centre()
         self.Show()
 
+    def OnApplyButton(self, evt):
+        self.setChanged()
+    def OnOkButton(self, evt):
+        self.setChanged()
+        self.Close()
+    def OnCancelButton(self, evt):
+        self.Close()
+
     def OnExit(self):
-            self.Close()
+        self.Close()
 
     def OnSelectColour(self, evt):
         newcolor=evt.GetValue()
         obj=evt.GetEventObject()
         type=obj.getType()
         self.dictionary[type]=newcolor
-        print self.dictionary
-        print obj.GetType()
+        #print self.dictionary
+        #print obj.getType()
 
 if __name__ == "__main__":
     app = wx.PySimpleApp()

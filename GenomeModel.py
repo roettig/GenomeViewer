@@ -136,6 +136,8 @@ class GenomeModel(Observable):
             self.layout.setUpperCase(False)
         else:
             self.layout.setUpperCase(True)
+    def getCharWidth(self):
+        self.layout.getCharWidth()
     def writeSequence(self, txtctrl):
         #print self.genome.getSequence()[0:50]
         #print "UpperCase: " + str(self.layout.getUpperCase())

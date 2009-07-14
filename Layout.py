@@ -25,8 +25,7 @@ class Layout(Observable):
         self.numSize=initial_numSize
         self.seqColor=initial_seqColor
         self.numColor=initial_numColor
-        self.colorList=initial_colorList=[]
-        #'#0000FF', '#FF0000', '#008000', '#808080', '#000080', '#800000', '#00FF00', '#FF00FF', '#800080', '#808000', '#00FFFF', '#7FFF00', '#8B008B', '#E9967A'
+        self.colorList=initial_colorList=[wx.Color(139 ,0, 0), wx.Color(0, 0, 255), wx.Color(84, 139, 84),wx.Color(0, 0, 139)]
         self.colListIter=iter(self.colorList)
         self.typeColDict={}
         self.leftIndent=initial_leftIndent
@@ -86,17 +85,17 @@ class Layout(Observable):
         return wx.Font(self.seqSize, wx.MODERN, self.seqStyle, self.seqWeight)
     def setSeqFont(self, size, style, weight):
         self.seqSize=size
-        self.seqFamily=wx.MODERN
         self.seqStyle=style
         self.seqWeight=weight
         self.setChanged()
     def getNumFont(self):
         return wx.Font(self.numSize, wx.MODERN, wx.NORMAL, wx.BOLD)
+    def getCharWidth(self):
+        print "IsFixedWidth: ", self.getSeqFont().IsFixedWidth()
+        print "IsUsingSizeInPixels: ", self.getSeqFont().IsUsingSizeInPixels()
+        print "GetPixelSize: ", self.getSeqFont().GetPixelSize()
     def setNumFont(self, size):
         self.numSize=size
-        self.numFamily=wx.MODERN
-        self.numStyle=wx.NORMAL
-        self.numWeight=wx.BOLD
         self.setChanged()
     def getSeqTextAttrEx(self):
         rta = rt.RichTextAttr()
