@@ -21,6 +21,7 @@ class Layout(Observable):
     seqWeight=wx.BOLD
     upperCase = True
     charsPerLine=0
+    # constructor
     def __init__(self, initial_seqSize=10, initial_numSize=8, initial_seqColor=wx.Color(0,0,0), initial_numColor=wx.Color(0,0,0), initial_leftIndent=50, initial_lineSpacing=20, initial_charsPerLine=50):
         self.seqSize=initial_seqSize
         self.numSize=initial_numSize
