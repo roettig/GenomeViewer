@@ -143,6 +143,9 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnSeqColor, seqColor)
         numColor= formatMenu.Append(-1, "Numeration Color", "Change Color Of Numeration")
         self.Bind(wx.EVT_MENU, self.OnNumColor, numColor)
+        formatMenu.AppendSeparator()
+        charsPerLine = formatMenu.Append(-1, "Chars Per Line", "Set Number Of Characters Per Line")
+        self.Bind(wx.EVT_MENU, self.OnCharsPerLine, charsPerLine)
 
         #menu Help
         helpMenu = wx.Menu()
@@ -162,7 +165,14 @@ class MainFrame(wx.Frame):
         menuBar.Append(helpMenu, "Help")
         self.SetMenuBar(menuBar)
 
-
+    def OnCharsPerLine(self, evt):
+        cpl=self.genomemodel.getCharsPerLine()
+        #self.genomemodel.getCharsPerLine()
+        dlg = wx.NumberEntryDialog(self, "", "Enter Characters Per Line:",
+                                   "CharsPerLine", cpl, 20, 150)
+        if dlg.ShowModal() == wx.ID_OK:
+            self.genomemodel.setCharsPerLine(dlg.GetValue())
+            dlg.Destroy()
     def OnSaveTxt(self, evt):
         if not self.genomeview.getRtc().GetFilename():
             self.OnSaveTxtAs(evt)

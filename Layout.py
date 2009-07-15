@@ -20,7 +20,8 @@ class Layout(Observable):
     seqStyle=wx.NORMAL
     seqWeight=wx.BOLD
     upperCase = True
-    def __init__(self, initial_seqSize=10, initial_numSize=8, initial_seqColor=wx.Color(0,0,0), initial_numColor=wx.Color(0,0,0), initial_leftIndent=50, initial_lineSpacing=20):
+    charsPerLine=0
+    def __init__(self, initial_seqSize=10, initial_numSize=8, initial_seqColor=wx.Color(0,0,0), initial_numColor=wx.Color(0,0,0), initial_leftIndent=50, initial_lineSpacing=20, initial_charsPerLine=50):
         self.seqSize=initial_seqSize
         self.numSize=initial_numSize
         self.seqColor=initial_seqColor
@@ -33,6 +34,7 @@ class Layout(Observable):
         self.seqStyle=wx.NORMAL
         self.seqWeight=wx.BOLD
         self.upperCase = True
+        self.charsPerLine=initial_charsPerLine
     def setSeqSize(self,n):
         self.seqSize=n
         self.setChanged()
@@ -128,3 +130,8 @@ class Layout(Observable):
         return self.typeColDict.get(key)
     def getTypeDict(self):
         return self.typeColDict
+    def getCharsPerLine(self):
+        return self.charsPerLine
+    def setCharsPerLine(self, n):
+        self.charsPerLine=n
+        self.setChanged()

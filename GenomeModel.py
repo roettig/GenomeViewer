@@ -14,15 +14,13 @@ from Information import Information
 class GenomeModel(Observable):
     genome = Genome()
     featureListContainer = FeatureListContainer()
-    charsPerLine = 0
     position = 0
     startRange = 0
     endRange = 0
     layout = Layout()
-    def __init__(self, genome=Genome(), flc=FeatureListContainer(), initial_charsPerLine=50, initial_position=3520, initial_startRange=0, initial_endRange=5000):
+    def __init__(self, genome=Genome(), flc=FeatureListContainer(), initial_position=3520, initial_startRange=0, initial_endRange=5000):
         self.genome=genome
         self.featureListContainer=flc
-        self.charsPerLine=initial_charsPerLine
         self.position=initial_position
         self.startRange=initial_startRange
         self.endRange=initial_endRange
@@ -38,10 +36,9 @@ class GenomeModel(Observable):
         self.featureListContainer=flc
         self.setChanged()
     def getCharsPerLine(self):
-        return self.charsPerLine
+        return self.layout.getCharsPerLine()
     def setCharsPerLine(self, n):
-        self.charsPerLine=n
-        self.setChanged()
+        self.layout.setCharsPerLine(n)
     def getPosition(self):
         return self.position
     def setPosition(self, n):
@@ -148,20 +145,20 @@ class GenomeModel(Observable):
         seqLen=len(sequence)
         numeration=self.startRange
         i=0
-        while i+self.charsPerLine <= seqLen:
+        while i+self.layout.getCharsPerLine() <= seqLen:
             txtctrl.BeginStyle(self.layout.getSeqTextAttrEx())
             # print str(len(sequence[i:i+self.charsPerLine]))
-            txtctrl.WriteText(sequence[i:i+self.charsPerLine])
+            txtctrl.WriteText(sequence[i:i+self.layout.getCharsPerLine()])
             txtctrl.Newline()
             txtctrl.EndStyle()
             txtctrl.BeginStyle(self.layout.getNumTextAttrEx())
             txtctrl.WriteText(self.writeNum(len(str(self.endRange-1)), str(numeration), str(numeration+txtctrl.GetLineLength(txtctrl.GetNumberOfLines()-2)-1)))
             # letzte Zeile ohne Newline()
-            if i+self.charsPerLine < seqLen:
+            if i+self.layout.getCharsPerLine() < seqLen:
                 # print "charsPerLine" + str(i+self.charsPerLine) + "=" + str(seqLen)
                 txtctrl.Newline()
             txtctrl.EndStyle()
-            i+=self.charsPerLine
+            i+=self.layout.getCharsPerLine()
             numeration+=txtctrl.GetLineLength(txtctrl.GetNumberOfLines()-3)
         if seqLen-i>0:
             txtctrl.BeginStyle(self.layout.getSeqTextAttrEx())
@@ -206,10 +203,10 @@ class GenomeModel(Observable):
         rta.SetURL(description)
         txtctrl.Bind(wx.EVT_TEXT_URL, self.onUrl)
         #txtctrl.SetStyle((246, 306), rta)
-        calc1=start%self.charsPerLine
-        calc2=self.charsPerLine-calc1
-        calc3=self.startRange%self.charsPerLine
-        calc4=(calc2+calc3)%self.charsPerLine
+        calc1=start%self.layout.getCharsPerLine()
+        calc2=self.layout.getCharsPerLine()-calc1
+        calc3=self.startRange%self.layout.getCharsPerLine()
+        calc4=(calc2+calc3)%self.layout.getCharsPerLine()
         modStart=self.modifyStartPos(start,txtctrl)
         modEnd=self.modifyEndPos(end, txtctrl)
         #print "calc1: " + str(calc1)
@@ -229,10 +226,10 @@ class GenomeModel(Observable):
                 modStart+=calc4+txtctrl.GetLineLength(1)+2
                 #print "else"
         # Mitte: faerbt ganze Zeilen
-        while modStart+self.charsPerLine<=modEnd:
-            txtctrl.SetStyle((modStart,modStart+self.charsPerLine), rta)
+        while modStart+self.layout.getCharsPerLine()<=modEnd:
+            txtctrl.SetStyle((modStart,modStart+self.layout.getCharsPerLine()), rta)
             #print str(modStart+self.charsPerLine+txtctrl.GetLineLength(1)+1)
-            modStart+=self.charsPerLine+txtctrl.GetLineLength(1)+2
+            modStart+=self.layout.getCharsPerLine()+txtctrl.GetLineLength(1)+2
             #print "middle"
         # Ende: faerbt letzte Zeile nicht ganz
         if modEnd-modStart>0:
@@ -241,7 +238,7 @@ class GenomeModel(Observable):
     # wandelt Positionen auf dem Genom in Positionen im Genomtextfeld um
     def modifyStartPos(self, n, txtctrl):
         newN=n-self.startRange
-        quot=newN/self.charsPerLine*2
+        quot=newN/self.layout.getCharsPerLine()*2
         numCount=0
         i=1
         while i <= quot:
@@ -251,7 +248,7 @@ class GenomeModel(Observable):
         return newN+quot+numCount
     def modifyEndPos(self, n, txtctrl):
         newN=n-self.startRange
-        quot=newN/self.charsPerLine*2
+        quot=newN/self.layout.getCharsPerLine()*2
         numCount=0
         i=1
         while i < quot:
