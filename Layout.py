@@ -7,6 +7,7 @@ import random
 from Observable import Observable
 
 class Layout(Observable):
+    """contains layout data"""
     seqSize=0
     numSize=0
     seqColor=wx.Color(0,0,0) #black

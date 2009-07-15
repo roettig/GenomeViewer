@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-#import Feature
-#import Tupel
 import os
 from Genome import Genome
 from FeatureListContainer import FeatureListContainer

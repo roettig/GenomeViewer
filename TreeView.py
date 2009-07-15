@@ -10,6 +10,7 @@ from GenomeModel import GenomeModel
 
 
 class TreeView(wx.Panel, IObserver):
+	"""cointains methods to get tree-view"""
 
 	def __init__(self, observed, model, *args, **kwargs):
 
@@ -99,4 +100,10 @@ class TreeView(wx.Panel, IObserver):
 			search = self.tree.AppendItem(self.searchResults, Imports.con.getFeatureList(i).getTitle())
 			self.AddTreeNodes(search, Imports.con.getFeatureList(i))
 		self.tree.Expand(self.root)
+		self.tree.Expand(self.ptt)
+		self.tree.Expand(self.gff)
+		if self.searchResults != None:
+			self.tree.Expand(self.searchResults)
+		else:
+			pass
 

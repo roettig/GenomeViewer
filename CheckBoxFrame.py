@@ -2,6 +2,7 @@ import wx
 import Imports
 
 class CheckBoxFrame(wx.Frame):
+    """select coloured features"""
     def __init__(self):
         wx.Frame.__init__(self , None,-1,"Selection View", size = (300, 200))
         panel = wx.Panel(self,-1)
@@ -10,7 +11,7 @@ class CheckBoxFrame(wx.Frame):
         checkbox3 = wx.CheckBox(panel, -1, "Start Codon", (20,50),(90,30))
         checkbox4 = wx.CheckBox(panel, -1, "Stop Codon", (20,70),(90,30))
         btn1 = wx.Button(panel, -1, "color features", (150,100), (90,20))
-        #self.Bind(btn1, self.CheckCheckboxes, btn1)
+        #self.Bind(wx.EVT_BUTTON, self.CheckCheckboxes(), self)
         checkbox1.Show()
         checkbox2.Show()
         checkbox3.Show()

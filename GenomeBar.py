@@ -9,7 +9,7 @@ from Layout import Layout
 m = 10 #scale margin
 
 class GenomeBar(wx.Panel, IObserver):
-
+    """contains navigation bar"""
     def __init__(self, model, *args, **kwargs):
         wx.Panel.__init__(self, style=wx.BORDER_SUNKEN, *args, **kwargs)
 

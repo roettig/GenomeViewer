@@ -5,6 +5,7 @@ from cButton import cButton
 from Observable import Observable
 
 class TypeColors(wx.Frame, Observable):
+    """cotains informations about every colour of each type of sequence"""
     dictionary={}
     def __init__(self, dictionary):
 

@@ -1,6 +1,7 @@
 import wx
 
 class ProportionalSplitter(wx.SplitterWindow):
+    """window layout"""
     def __init__(self,parent, id = -1, proportion=0.66, size = wx.DefaultSize, **kwargs):
         wx.SplitterWindow.__init__(self,parent,id,wx.Point(0, 0),size, **kwargs)
         self.SetMinimumPaneSize(50) #the minimum size of a pane.

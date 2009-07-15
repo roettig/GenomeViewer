@@ -22,8 +22,10 @@ from CheckBoxFrame import CheckBoxFrame
 import wx.richtext as rt
 from TypeColors import TypeColors
 import  time
+from webbrowser import open
 
 class MainFrame(wx.Frame):
+    """initialize mainframe"""
 
     hsize = 800
     vsize = 600
@@ -168,8 +170,14 @@ class MainFrame(wx.Frame):
         about = helpMenu.Append(-1, "About", "About GenomeViewer")
         self.Bind(wx.EVT_MENU, self.OnAbout, about)
         #NCBI
-        stuff = helpMenu.Append(-1, "Stuff", "Get more Stuff to View")
+        stuff = helpMenu.Append(-1, "download files from NCBI", "download files")
         self.Bind(wx.EVT_MENU, self.OnStuff, stuff)
+
+        #uni-tue
+        uni = helpMenu.Append(-1, "Uni Tuebingen", "official website")
+        self.Bind(wx.EVT_MENU, self.OnUni, uni)
+
+
 
         #append items to menu bar
         menuBar = wx.MenuBar()
@@ -180,6 +188,9 @@ class MainFrame(wx.Frame):
         menuBar.Append(formatMenu, "Format")
         menuBar.Append(helpMenu, "Help")
         self.SetMenuBar(menuBar)
+
+    def OnUni(self, evt):
+        open('www.uni-tuebingen.de')
 
     def NotifyTimer(self):
         t = time.localtime(time.time())
@@ -344,13 +355,7 @@ class MainFrame(wx.Frame):
             search.genesearch(dialog.GetValue())
 
     def OnStuff(self,event):
-        info = wx.AboutDialogInfo()
-        info.Name = "NCBI"
-        info.Description = wordwrap(
-            "to get more crazy stuff for GenView....click",
-            350, wx.ClientDC(self))
-        info.WebSite = ("http://www.ncbi.nlm.nih.gov/", "Homepage of NCBI")
-        wx.AboutBox(info)
+        open('http://www.ncbi.nlm.nih.gov/Ftp/')
 
 if __name__ == "__main__":
     app = wx.PySimpleApp()

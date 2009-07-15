@@ -20,6 +20,7 @@ import wx.richtext as rt
 #        info.Destroy()
 
 class Information(wx.Dialog):
+    """class to get pop up information in text view"""
     def __init__(self, parent, id, string, title):
         wx.Dialog.__init__(self, parent, id, title, size=(400, 440))
 

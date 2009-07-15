@@ -12,6 +12,7 @@ from Information import Information
 
 
 class GenomeModel(Observable):
+    """contains data of genome-view"""
     genome = Genome()
     featureListContainer = FeatureListContainer()
     position = 0

@@ -3,12 +3,12 @@
 from Observable import Observable
 
 class Genome(Observable):
+    """contains loaded genome"""
     sequence = ""
 
     def __init__(self, initial_sequence = ""):
         self.sequence = initial_sequence
     def setSequence(self, sequence):
-        # "Hallo Welt"
         self.sequence = sequence
         self.setChanged()
     def getSequence(self):
