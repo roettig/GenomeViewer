@@ -10,13 +10,13 @@ from GenomeModel import GenomeModel
 
 
 class TreeView(wx.Panel, IObserver):
-	
+
 	def __init__(self, observed, model, *args, **kwargs):
-		
-		wx.Panel.__init__(self, style=wx.BORDER_SUNKEN, *args, **kwargs)    
+
+		wx.Panel.__init__(self, style=wx.BORDER_SUNKEN, *args, **kwargs)
 
 		self.model = model
-		self.tree = wx.TreeCtrl(self, -1)
+		self.tree = wx.TreeCtrl(self)
 		self.root = self.tree.AddRoot("Features")
 		self.searchResults = self.tree.AppendItem(self.root, "Search Results")
 		self.ptt = self.tree.AppendItem(self.root, "PTT-Imports")
@@ -39,6 +39,7 @@ class TreeView(wx.Panel, IObserver):
 			self.tree)
 		self.Bind(wx.EVT_TREE_ITEM_RIGHT_CLICK, self.OnTreeRightClick, self.tree)
 		self.SetSizer(hbox)
+		self.tree.Expand(self.root)
 		self.Show(True)
 
 	def AddTreeNodes(self, parentItem, items):
@@ -94,5 +95,8 @@ class TreeView(wx.Panel, IObserver):
 		self.gff = self.tree.AppendItem(self.root, "GFF-Imports")
 		self.AddTreeNodes(self.gff, Imports.con.getGFFList())
 		self.AddTreeNodes(self.ptt, Imports.con.getPTTList())
+		for i in range(2, Imports.con.getContainerLength()):
+			search = self.tree.AppendItem(self.searchResults, Imports.con.getFeatureList(i).getTitle())
+			self.AddTreeNodes(search, Imports.con.getFeatureList(i))
 		self.tree.Expand(self.root)
 

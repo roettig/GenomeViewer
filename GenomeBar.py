@@ -4,7 +4,9 @@ import wx
 import Imports
 from IObserver import IObserver
 from GenomeModel import GenomeModel
+from Layout import Layout
 
+m = 10 #scale margin
 
 class GenomeBar(wx.Panel, IObserver):
 
@@ -31,10 +33,13 @@ class GenomeBar(wx.Panel, IObserver):
     def OnResize(self, event):
         self.drawBar()
 
-
     def OnLeftDown(self, event):
         pos = event.GetPosition()
-        genomePos = self.mousePosToGenomePos(pos[0])
+        genomePos = self.mousePosToGenomePos(pos[0])#, self.width-(self.width % 100)-m)
+        if genomePos > Imports.genome.getSequenceLength():
+            genomePos = Imports.genome.getSequenceLength()
+        if genomePos < 0:#self.mousePosToGenomePos(m):
+            genomePos = 0#self.mousePosToGenomePos(m)
         #print "#",genomePos
         startpos = max(0, genomePos - 2500)
         endpos = min(Imports.genome.getSequenceLength(), genomePos + 2500)
@@ -47,7 +52,7 @@ class GenomeBar(wx.Panel, IObserver):
 
     def mousePosToGenomePos(self, mPos):
         mPos = float(mPos)
-        width = float(self.GetSize()[0])
+        width = float(self.GetSize()[0])# -(self.width % 100)+m-1
         proportion = mPos / width
         genomeLength = Imports.genome.getSequenceLength()
         return int(genomeLength * proportion)
@@ -59,43 +64,41 @@ class GenomeBar(wx.Panel, IObserver):
         proportion = 0
         if (width > 0):
             proportion = gPos / width
-        barLength = self.GetSize()[0]
+        barLength = self.GetSize()[0]# -(self.width % 100)
         return int(barLength * proportion)
 
 
     def drawBar(self):
         """ draws GenomeBar """
-        dc = wx.ClientDC(self)
-        self.width, self.height = self.GetSize()
+        if Imports.genome.getSequenceLength() != 0: #no genome no genomeBar
+            dc = wx.ClientDC(self)
+            self.width, self.height = self.GetSize()
 
-        #draw background
-        #self.barImg = self.barImg.Scale(self.width, self.height)
-        #self.barBmp = self.barImg.ConvertToBitmap()
-        #barBrush = wx.BrushFromBitmap(self.barBmp)
-        #dc.SetPen(wx.Pen('white', 1, wx.TRANSPARENT))
-        #dc.SetBrush(barBrush)
-        dc.SetPen(wx.Pen('white'))
-        dc.DrawRectangle(0, 0, self.width-3.5, self.height-3.5)
+            dc.SetPen(wx.Pen('white', wx.SOLID))
+            dc.DrawRectangle(0, 0, self.width-3.5, self.height-3.5)
 
-        #draw scale
-        dc.SetPen(wx.Pen('black'))
-        for i in range(self.width):
-            if i != 0: #no zero on first bar
-                if i != 0 | Imports.genome.getSequenceLength() != 0: #no genome no scale
-                    if not (i % 100): #extra-long bar with numeration each 100 bars
-                        dc.DrawLine(i, self.height/2 -10, i, self.height/2 + 13)
-                        w, h = dc.GetTextExtent(str(self.mousePosToGenomePos(i))) #numeration = genome-pos
-                        if (self.height/2 -30) >= 0: #no negative position on panel
-                            dc.DrawText(str(self.mousePosToGenomePos(i)), i-w/2, self.height/2 -30)
-                        else: dc.DrawText(str(self.mousePosToGenomePos(i)), i-w/2, 0)
-                    elif not (i % 20): #longer bar each 20 bars
-                        dc.DrawLine(i, self.height/2 -8, i, self.height/2 +8)
-                    elif not (i % 2): dc.DrawLine(i, self.height/2 -4, i, self.height/2 +4) #all other short bars
+            #draw scale
+            dc.SetPen(wx.Pen('light blue'))
+            dc.SetFont(wx.Font(7, wx.MODERN, wx.NORMAL, wx.BOLD))
+            scaleWidth = self.width#want long bar at the end
 
-        #draw pointer
-        pos = self.genomePosToMousePos(self.model.getPosition())
-        #pos = pos - self.pointerImg.GetWidth()/2 +1
-        dc.DrawLine(pos, 0, pos, self.height)
+            for i in range(scaleWidth):
+                if i % 100 == 0: #extra-long bar with numeration each 100 bars
+                    dc.DrawLine(i, self.height/2 -10, i, self.height/2 + 13)
+                    w, h = dc.GetTextExtent(str(self.mousePosToGenomePos(i))) #numeration = genome-pos
+                    if (self.height/2 -30) >= 0: #no negative position on panel
+                        dc.DrawText(str(self.mousePosToGenomePos(i)), i-w/2, self.height/2 -30)
+                    else: dc.DrawText(str(self.mousePosToGenomePos(i)), i-w/2, 0)
+                elif i % 20 == 0: #longer bar each 20 bars
+                    dc.DrawLine(i, self.height/2 -8, i, self.height/2 +8)
+                elif i % 2 == 0: dc.DrawLine(i, self.height/2 -4, i, self.height/2 +4) #all other short bars
+
+
+            #draw pointer
+            dc.SetPen(wx.Pen('gray'))
+            pos = self.genomePosToMousePos(self.model.getPosition())
+            #pos = pos - self.pointerImg.GetWidth()/2 +1
+            dc.DrawLine(pos+1, self.height/2-11, pos+1, self.height/2+14)
 
     def update(self, source, object):
         self.drawBar()

@@ -10,7 +10,7 @@ class TypeColors(wx.Frame, Observable):
         self.dictionary=dictionary
 
         frame=wx.Frame.__init__(self , None,-1,"Change Type Colors", size = (400, 500))
-        #panel = scrolled.ScrolledPanel(self, -1, style = wx.TAB_TRAVERSAL|wx.SUNKEN_BORDER|wx.EXPAND)
+        panel = scrolled.ScrolledPanel(self, -1, style = wx.TAB_TRAVERSAL|wx.SUNKEN_BORDER|wx.EXPAND)
         sizer = wx.FlexGridSizer(cols=2, vgap=5, hgap=4)
 
         types = self.dictionary.keys()
@@ -19,21 +19,21 @@ class TypeColors(wx.Frame, Observable):
         #print self.dictionary
         if len(types) != 0:
             for type in types:
-                label=wx.StaticText(self, -1, type)
+                label=wx.StaticText(panel, -1, type)
                 color=self.dictionary.get(type)
                 #print color
-                button = cButton(self, color, type)
+                button = cButton(panel, color, type)
                 button.Bind(csel.EVT_COLOURSELECT, self.OnSelectColour)
 
                 sizer.AddMany([(label), (button)])
         else:
-            label=wx.StaticText(self, -1, 'No Annotations loaded')
+            label=wx.StaticText(panel, -1, 'No Annotations loaded')
             sizer.Add(label)
 
         #Buttons
-        okButton=wx.Button(self, -1, "OK")
+        okButton=wx.Button(panel, -1, "OK")
         self.Bind(wx.EVT_BUTTON, self.OnOkButton, id=okButton.GetId())
-        cancelButton=wx.Button(self, -1, "Cancel")
+        cancelButton=wx.Button(panel, -1, "Cancel")
         self.Bind(wx.EVT_BUTTON, self.OnCancelButton, id=cancelButton.GetId())
         #applyButton=wx.Button(self, -1, "Apply")
         #self.Bind(wx.EVT_BUTTON, self.OnApplyButton, id=applyButton.GetId())
@@ -48,8 +48,9 @@ class TypeColors(wx.Frame, Observable):
         vsizer.Add(sizer, 1, wx.GROW|wx.EXPAND|wx.ALL, 5)
         hsizer.Add(vsizer, 1, wx.GROW|wx.EXPAND)
 
-        self.SetSizerAndFit(hsizer)
+        panel.SetSizerAndFit(hsizer)
         self.SetAutoLayout(1)
+        self.Fit()
         self.Centre()
         self.Show()
 

@@ -93,7 +93,7 @@ class MainFrame(wx.Frame):
         editMenu = wx.Menu()
         edit = editMenu.Append(-1, "Feature Selection", "Edit Feature Selection")
         self.Bind(wx.EVT_MENU, self.OnOpenCheckFrame, edit)
-        changeTypeCol = editMenu.Append(-1, "Change Type Colors", "Change Type Colors")
+        changeTypeCol = editMenu.Append(-1, "Change Feature Colors", "Change Colors of Features")
         self.Bind(wx.EVT_MENU, self.OnOpenTypeColors, changeTypeCol)
 
 
@@ -301,7 +301,7 @@ class MainFrame(wx.Frame):
                                     style=wx.OK|wx.CANCEL)
         if dialog.ShowModal() == wx.ID_OK:
             print "You have entered: %s" % dialog.GetValue()
-            search=Search(self.genomemodel)
+            search=Search(self.genomemodel, self.treeview)
             search.regexsearch(dialog.GetValue())
 
     def OnOpenGeneSearch(self,event):
@@ -310,7 +310,7 @@ class MainFrame(wx.Frame):
                                     style=wx.OK|wx.CANCEL)
         if dialog.ShowModal() == wx.ID_OK:
             print "You have entered: %s" % dialog.GetValue()
-            search=Search(self.genomemodel)
+            search=Search(self.genomemodel, self.treeview)
             search.genesearch(dialog.GetValue())
 
     def OnStuff(self,event):
