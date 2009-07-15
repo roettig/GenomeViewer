@@ -21,6 +21,7 @@ from sys import platform
 from CheckBoxFrame import CheckBoxFrame
 import wx.richtext as rt
 from TypeColors import TypeColors
+import  time
 
 class MainFrame(wx.Frame):
 
@@ -29,9 +30,24 @@ class MainFrame(wx.Frame):
 
     def __init__ (self):
 
+        # parent constructor
         wx.Frame.__init__(self, None, -1, "Genome Viewer", size=(self.hsize, self.vsize))
 
-        self.CreateStatusBar()
+        # min size of the frame
+        self.SetMinSize((self.hsize, self.vsize))
+
+        # statusbar
+        self.statusbar=self.CreateStatusBar()
+        self.statusbar.SetFieldsCount(3)
+        self.statusbar.SetStatusWidths([-3, -1, -1])
+        self.statusbar.SetStatusText("GenomeViewer Version 1.0", 1)
+
+        # timer in statusbar
+        self.timer = wx.PyTimer(self.NotifyTimer)
+        self.timer.Start(1000)
+        self.NotifyTimer()
+
+        # creates the menubar
         self.MakeMenuBar()
 
         self.container = Imports.con
@@ -86,7 +102,7 @@ class MainFrame(wx.Frame):
 
         fileMenu.AppendSeparator()
         # menu item "Exit"
-        exit = fileMenu.Append(-1, "Exit", "Exit programm")
+        exit = fileMenu.Append(-1, "Exit", "Exit Program")
         self.Bind(wx.EVT_MENU, self.OnExit, exit)
 
         #menu "Edit
@@ -165,6 +181,10 @@ class MainFrame(wx.Frame):
         menuBar.Append(helpMenu, "Help")
         self.SetMenuBar(menuBar)
 
+    def NotifyTimer(self):
+        t = time.localtime(time.time())
+        st = time.strftime("%d-%b-%Y   %I:%M:%S", t)
+        self.statusbar.SetStatusText(st, 2)
     def OnCharsPerLine(self, evt):
         cpl=self.genomemodel.getCharsPerLine()
         #self.genomemodel.getCharsPerLine()
@@ -331,7 +351,6 @@ class MainFrame(wx.Frame):
             350, wx.ClientDC(self))
         info.WebSite = ("http://www.ncbi.nlm.nih.gov/", "Homepage of NCBI")
         wx.AboutBox(info)
-
 
 if __name__ == "__main__":
     app = wx.PySimpleApp()
