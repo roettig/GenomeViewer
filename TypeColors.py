@@ -5,87 +5,81 @@ from cButton import cButton
 from Observable import Observable
 
 class TypeColors(wx.Frame, Observable):
-    """cotains informations about every colour of each type of sequence"""
+
+    """contains informations about every color of each type of sequence"""
+
     dictionary={}
-    def __init__(self, dictionary):
-
+    def __init__(self, parent, dictionary):
         self.dictionary=dictionary
-
-        wx.Frame.__init__(self , None,-1,"Change Type Colors", size=(400, 400))
-        sizer = wx.FlexGridSizer(cols=2, vgap=5, hgap=4)
-
         types = self.dictionary.keys()
         colors= self.dictionary.values()
-        #print self.dictionary
 
         if len(types) != 0:
-            self.SetMaxSize((400, 400))
-            panel = scrolled.ScrolledPanel(self, -1)
 
+            wx.Frame.__init__(self , None,-1,"Change Type Colors")
+
+            fgSizer=wx.FlexGridSizer(cols=2, vgap=5, hgap=4)
+            hSizer=wx.BoxSizer(wx.HORIZONTAL)
+
+            panel1=scrolled.ScrolledPanel(self, -1, size=(400,300), style=wx.SUNKEN_BORDER)
+            panel2=wx.Panel(self, -1)
+
+            t=wx.StaticText(panel1, -1, 'Types')
+            c=wx.StaticText(panel1, -1, 'Colors')
             font=wx.Font(10, wx.NORMAL, wx.NORMAL, wx.BOLD)
-            t=wx.StaticText(panel, -1, 'Types')
             t.SetFont(font)
-            c=wx.StaticText(panel, -1, 'Colors')
             c.SetFont(font)
-            sizer.AddMany([(t), (c)])
+
+            fgSizer.AddMany([(t), (c)])
+
+
+
             for type in types:
-                label=wx.StaticText(panel, -1, type)
+                label=wx.StaticText(panel1, -1, type)
                 color=self.dictionary.get(type)
-                #print color
-                button = cButton(panel, color, type)
+                button = cButton(panel1, color, type)
                 button.Bind(csel.EVT_COLOURSELECT, self.OnSelectColour)
 
-                sizer.AddMany([(label), (button)])
+                fgSizer.Add(label)
+                fgSizer.Add(button)
+
+
+            hSizerPanel1=wx.BoxSizer(wx.HORIZONTAL)
+            hSizerPanel1.Add(fgSizer, 0, wx.TOP|wx.LEFT, 10)
+            panel1.SetSizer(hSizerPanel1)
+            panel1.SetAutoLayout(1)
+            panel1.SetupScrolling()
 
             #Buttons
-            okButton=wx.Button(panel, -1, "OK")
+            okButton=wx.Button(panel2, -1, "OK")
             self.Bind(wx.EVT_BUTTON, self.OnOkButton, id=okButton.GetId())
-            cancelButton=wx.Button(panel, -1, "Cancel")
+            cancelButton=wx.Button(panel2, -1, "Cancel")
             self.Bind(wx.EVT_BUTTON, self.OnCancelButton, id=cancelButton.GetId())
 
-            sizer.Add(okButton)
-            sizer.Add(cancelButton)
-            vsizer = wx.BoxSizer(wx.VERTICAL)
-            hsizer = wx.BoxSizer(wx.HORIZONTAL)
-            vsizer.Add(sizer, 1, wx.GROW|wx.EXPAND|wx.ALL, 5)
-            hsizer.Add(vsizer, 1, wx.GROW|wx.EXPAND)
-            panel.SetSizer(hsizer)
-            #panel.SetAutoLayout(1)
-            panel.SetupScrolling()
-            #panel.Fit()
-            #self.SetAutoLayout(1)
-            #self.Fit()
-            #self.SetSize(panel.GetSize())
-            self.SetMaxSize(self.GetSize())
-            self.SetMinSize(self.GetSize())
-        else:
-            panel=wx.Panel(self,-1)
-            label=wx.StaticText(panel, -1, 'No Annotations loaded')
-            empty=wx.StaticText(panel, -1, '')
-            sizer.AddMany([(label), (empty)])
+            hSizer.Add(okButton, 1, wx.ALL|wx.EXPAND)
+            hSizer.Add(cancelButton, 1, wx.ALL|wx.EXPAND)
+            panel2.SetSizer(hSizer)
+            panel2.SetAutoLayout(1)
 
-            #Buttons
-            okButton=wx.Button(panel, -1, "OK")
-            self.Bind(wx.EVT_BUTTON, self.OnOkButton, id=okButton.GetId())
-            cancelButton=wx.Button(panel, -1, "Cancel")
-            self.Bind(wx.EVT_BUTTON, self.OnCancelButton, id=cancelButton.GetId())
 
-            sizer.Add(okButton)
-            sizer.Add(cancelButton)
+
             vsizer = wx.BoxSizer(wx.VERTICAL)
-            hsizer = wx.BoxSizer(wx.HORIZONTAL)
-            vsizer.Add(sizer, 1, wx.GROW|wx.EXPAND|wx.ALL, 5)
-            hsizer.Add(vsizer, 1, wx.GROW|wx.EXPAND)
-            panel.SetSizer(hsizer)
-            panel.SetAutoLayout(1)
-            panel.Fit()
+            vsizer.Add(panel1, 1, wx.EXPAND)
+            vsizer.Add(panel2, 0, wx.EXPAND)
+
+            self.SetSizer(vsizer)
             self.SetAutoLayout(1)
-            self.Fit()
+
             self.SetMaxSize(self.GetSize())
             self.SetMinSize(self.GetSize())
 
-        self.Centre()
-        self.Show()
+            self.SetAutoLayout(1)
+            self.Show()
+
+        else:
+            dlg = wx.MessageDialog(parent, "No Annotations loaded")
+            dlg.ShowModal()
+            dlg.Destroy()
 
     def OnApplyButton(self, evt):
         self.setChanged()
@@ -103,10 +97,3 @@ class TypeColors(wx.Frame, Observable):
         obj=evt.GetEventObject()
         type=obj.getType()
         self.dictionary[type]=newcolor
-        #print self.dictionary
-        #print obj.getType()
-
-if __name__ == "__main__":
-    app = wx.PySimpleApp()
-    TypeColors().Show()
-    app.MainLoop()

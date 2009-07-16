@@ -275,7 +275,7 @@ class MainFrame(wx.Frame):
         check = CheckBoxFrame()
 
     def OnOpenTypeColors(self, evt):
-        TypeColors(self.genomemodel.getTypeDict())
+        TypeColors(self, self.genomemodel.getTypeDict())
 
     def OnAbout(self, event):
         info = wx.AboutDialogInfo()
@@ -295,6 +295,9 @@ class MainFrame(wx.Frame):
         wx.AboutBox(info)
 
     def OnExit(self, event):
+        children=self.Children
+        for child in children:
+            child.Close(True)
         self.Close(True)
 
     def OnOpenGenomeFile(self, event):
@@ -362,4 +365,3 @@ if __name__ == "__main__":
     frame = MainFrame()
     frame.Show(True)
     app.MainLoop()
-
